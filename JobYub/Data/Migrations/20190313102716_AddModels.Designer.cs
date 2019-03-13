@@ -4,79 +4,22 @@ using JobYub.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace JobYub.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190313102716_AddModels")]
+    partial class AddModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.2.2-servicing-10034")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("JobYub.Models.Advertisement", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("ActivationStatus");
-
-                    b.Property<short>("Age");
-
-                    b.Property<int>("CityID");
-
-                    b.Property<string>("CollaborationType");
-
-                    b.Property<bool>("Confirmed");
-
-                    b.Property<string>("Description");
-
-                    b.Property<string>("EducationLevel");
-
-                    b.Property<string>("EndDate");
-
-                    b.Property<string>("Experience");
-
-                    b.Property<bool>("Gender");
-
-                    b.Property<int>("JobCategoryID");
-
-                    b.Property<double>("Latitude");
-
-                    b.Property<double>("Longitude");
-
-                    b.Property<int>("MaxSalary");
-
-                    b.Property<int>("MinSalary");
-
-                    b.Property<int>("RegionID");
-
-                    b.Property<string>("StartDate");
-
-                    b.Property<string>("TagIDs");
-
-                    b.Property<int>("TarrifID");
-
-                    b.Property<string>("Title");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("CityID");
-
-                    b.HasIndex("JobCategoryID");
-
-                    b.HasIndex("RegionID");
-
-                    b.HasIndex("TarrifID");
-
-                    b.ToTable("Advertisement");
-                });
 
             modelBuilder.Entity("JobYub.Models.ApplicationUser", b =>
                 {
@@ -205,27 +148,6 @@ namespace JobYub.Data.Migrations
                     b.ToTable("CompanyType");
                 });
 
-            modelBuilder.Entity("JobYub.Models.JobCategory", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Description");
-
-                    b.Property<string>("Name");
-
-                    b.Property<int?>("ParentCategoryID");
-
-                    b.Property<int>("ParentID");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("ParentCategoryID");
-
-                    b.ToTable("JobCategory");
-                });
-
             modelBuilder.Entity("JobYub.Models.Province", b =>
                 {
                     b.Property<int>("ID")
@@ -258,27 +180,6 @@ namespace JobYub.Data.Migrations
                     b.HasIndex("CityID");
 
                     b.ToTable("Region");
-                });
-
-            modelBuilder.Entity("JobYub.Models.Tarrif", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("Days");
-
-                    b.Property<string>("Description");
-
-                    b.Property<string>("Name");
-
-                    b.Property<string>("Price");
-
-                    b.Property<int>("PriorityID");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Tarrif");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -395,43 +296,20 @@ namespace JobYub.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("JobYub.Models.Advertisement", b =>
-                {
-                    b.HasOne("JobYub.Models.City", "City")
-                        .WithMany("Advertisements")
-                        .HasForeignKey("CityID")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("JobYub.Models.JobCategory", "JobCategory")
-                        .WithMany("Advertisements")
-                        .HasForeignKey("JobCategoryID")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("JobYub.Models.Region", "Region")
-                        .WithMany("Advertisements")
-                        .HasForeignKey("RegionID")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("JobYub.Models.Tarrif", "Tarrif")
-                        .WithMany("Advertisements")
-                        .HasForeignKey("TarrifID")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("JobYub.Models.ApplicationUser", b =>
                 {
                     b.HasOne("JobYub.Models.City", "City")
-                        .WithMany("Users")
+                        .WithMany()
                         .HasForeignKey("CityID")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("JobYub.Models.CompanyType", "CompanyType")
-                        .WithMany("Users")
+                        .WithMany()
                         .HasForeignKey("CompanyTypeID")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("JobYub.Models.Region", "Region")
-                        .WithMany("Users")
+                    b.HasOne("JobYub.Models.Region", "REgion")
+                        .WithMany()
                         .HasForeignKey("RegionID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
@@ -439,22 +317,15 @@ namespace JobYub.Data.Migrations
             modelBuilder.Entity("JobYub.Models.City", b =>
                 {
                     b.HasOne("JobYub.Models.Province", "Province")
-                        .WithMany("Cities")
+                        .WithMany()
                         .HasForeignKey("ProvinceID")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("JobYub.Models.JobCategory", b =>
-                {
-                    b.HasOne("JobYub.Models.JobCategory", "ParentCategory")
-                        .WithMany()
-                        .HasForeignKey("ParentCategoryID");
                 });
 
             modelBuilder.Entity("JobYub.Models.Region", b =>
                 {
                     b.HasOne("JobYub.Models.City", "City")
-                        .WithMany("Regions")
+                        .WithMany()
                         .HasForeignKey("CityID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
