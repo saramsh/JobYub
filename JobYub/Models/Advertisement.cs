@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,8 +8,9 @@ namespace JobYub.Models
 {
     public class Advertisement
     {
-		public int ID { get; set; }
-		public string Title { get; set; }
+        public int ID { get; set; }
+        [Display(Name ="عنوان")]
+        public string Title { get; set; }
 		public string Description { get; set; }
 
 		public string StartDate { get; set; }
@@ -27,7 +29,7 @@ namespace JobYub.Models
 
 		public Int16 Age { get; set; }
 
-		public bool Gender { get; set; }
+		public Gender Gender { get; set; }
 
 		public double Longitude { get; set; }
 
@@ -53,7 +55,8 @@ namespace JobYub.Models
 
 		public bool Confirmed { get; set; }
        
-
+        
 
     }
+    public enum Gender { male,female,unknown}
 }

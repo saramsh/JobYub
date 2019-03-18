@@ -16,15 +16,15 @@ namespace JobYub.Models
         public string EducationLevel { get; set; }
         public string Major { get; set; }
         public string MilitaryStatus { get; set; }
-        public int CityID { get; set; }
+        public int? CityID { get; set; }
         public virtual City City { get; set; }
-        public int RegionID { get; set; }
+        public int? RegionID { get; set; }
         public virtual Region Region { get; set; }
         public string Address { get; set; }
         public string Photo { get; set; }
         public byte[] Resume { get; set; }
         public string Company { get; set; }
-        public int CompanyTypeID { get; set; }
+        public int? CompanyTypeID { get; set; }
         public virtual CompanyType CompanyType { get; set; }
         public string Latitude { get; set; }
         public string Longtitude { get; set; }
