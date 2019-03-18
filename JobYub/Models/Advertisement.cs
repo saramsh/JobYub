@@ -20,7 +20,7 @@ namespace JobYub.Models
 
 		public string Experience { get; set; }
 
-		public string CollaborationType { get; set; }
+		public CollaborationType CollaborationType { get; set; }
 
 		public int MinSalary { get; set; }
 
@@ -59,4 +59,5 @@ namespace JobYub.Models
 
     }
     public enum Gender { male,female,unknown}
+    public enum CollaborationType{ fullTime, PartTime, both }
 }
