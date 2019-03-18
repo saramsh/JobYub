@@ -18,9 +18,9 @@ namespace JobYub.Models
 
 		public string TagIDs { get; set; }
 
-		public string Experience { get; set; }
+		public int Experience { get; set; }
 
-		public CollaborationType CollaborationType { get; set; }
+		public string CollaborationType { get; set; }
 
 		public int MinSalary { get; set; }
 
@@ -54,10 +54,21 @@ namespace JobYub.Models
 		public virtual Tarrif Tarrif { get; set; }
 
 		public bool Confirmed { get; set; }
-       
-        
 
-    }
+		public int PaymentID { get; set; }
+
+		public virtual Payment Payment { get; set; }
+
+		public Status status { get; set; }
+
+		public string ReportsDesc { get; set; }
+
+		public int ReportNum { get; set; }
+
+		public string Graduated { get; set; }
+
+	}
     public enum Gender { male,female,unknown}
-    public enum CollaborationType{ fullTime, PartTime, both }
+
+	public enum Status { waiting, confirmed, deactive}
 }
