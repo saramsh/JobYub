@@ -9,12 +9,15 @@ namespace JobYub.Models
     public class Advertisement
     {
         public int ID { get; set; }
+
         [Display(Name ="عنوان")]
         public string Title { get; set; }
-		public string Description { get; set; }
+
+        public string Description { get; set; }
 
 		public string StartDate { get; set; }
-		public string EndDate { get; set; }
+
+        public string EndDate { get; set; }
 
 		public string TagIDs { get; set; }
 
@@ -25,7 +28,8 @@ namespace JobYub.Models
 		public int MinSalary { get; set; }
 
 		public int MaxSalary { get; set; }
-		public string EducationLevel { get; set; }
+
+        public string EducationLevel { get; set; }
 
 		public Int16 Age { get; set; }
 
@@ -55,7 +59,7 @@ namespace JobYub.Models
 
 		public bool Confirmed { get; set; }
 
-		public int PaymentID { get; set; }
+		public int? PaymentID { get; set; }
 
 		public virtual Payment Payment { get; set; }
 

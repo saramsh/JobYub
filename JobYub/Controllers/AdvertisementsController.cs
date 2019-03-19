@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using JobYub.Data;
 using JobYub.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace JobYub.Controllers
 {
@@ -48,6 +49,7 @@ namespace JobYub.Controllers
         }
 
         // PUT: api/Advertisements/5
+       
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAdvertisement(int id, Advertisement advertisement)
         {
@@ -78,9 +80,13 @@ namespace JobYub.Controllers
         }
 
         // POST: api/Advertisements
+       
         [HttpPost]
         public async Task<ActionResult<Advertisement>> PostAdvertisement(Advertisement advertisement)
         {
+            //var user =await  _context.Users.FirstOrDefaultAsync(m => m.UserName == User.Identity.Name);
+            //advertisement.ApplicationUser = user;
+            //advertisement.ApplicationUserID = user.Id;
             _context.Advertisement.Add(advertisement);
             await _context.SaveChangesAsync();
 
@@ -88,6 +94,7 @@ namespace JobYub.Controllers
         }
 
         // DELETE: api/Advertisements/5
+      
         [HttpDelete("{id}")]
         public async Task<ActionResult<Advertisement>> DeleteAdvertisement(int id)
         {
