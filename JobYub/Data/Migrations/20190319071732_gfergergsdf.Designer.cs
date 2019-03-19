@@ -4,14 +4,16 @@ using JobYub.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace JobYub.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190319071732_gfergergsdf")]
+    partial class gfergergsdf
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -28,10 +30,6 @@ namespace JobYub.Data.Migrations
                     b.Property<bool>("ActivationStatus");
 
                     b.Property<short>("Age");
-
-                    b.Property<int>("ApplicationUserID");
-
-                    b.Property<string>("ApplicationUserId");
 
                     b.Property<int>("CityID");
 
@@ -82,8 +80,6 @@ namespace JobYub.Data.Migrations
                     b.Property<int>("status");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("CityID");
 
@@ -453,10 +449,6 @@ namespace JobYub.Data.Migrations
 
             modelBuilder.Entity("JobYub.Models.Advertisement", b =>
                 {
-                    b.HasOne("JobYub.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany("Advertisements")
-                        .HasForeignKey("ApplicationUserId");
-
                     b.HasOne("JobYub.Models.City", "City")
                         .WithMany("Advertisements")
                         .HasForeignKey("CityID")

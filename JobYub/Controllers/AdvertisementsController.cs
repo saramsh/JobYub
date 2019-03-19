@@ -23,9 +23,14 @@ namespace JobYub.Controllers
 
         // GET: api/Advertisements
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Advertisement>>> GetAdvertisement()
+        public async Task<ActionResult> GetAdvertisement()
         {
-            return await _context.Advertisement.ToListAsync();
+            var res=await _context.Advertisement.ToListAsync();
+            if (res != null)
+                return Ok(res);
+            else
+                return NotFound();
+                    
         }
 
         // GET: api/Advertisements/5

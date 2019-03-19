@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace JobYub.Models
 {
-    public class ApplicationUser:IdentityUser
+    public class ApplicationUser : IdentityUser
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Website { get; set; }
         public string BirthDate { get; set; }
         public string HomePhone { get; set; }
-		public string Mobile { get; set; }
-		public string EducationLevel { get; set; }
+        public string Mobile { get; set; }
+        public string EducationLevel { get; set; }
         public string Major { get; set; }
         public string MilitaryStatus { get; set; }
         public int? CityID { get; set; }
@@ -30,8 +30,9 @@ namespace JobYub.Models
         public string Latitude { get; set; }
         public string Longtitude { get; set; }
         public bool Graduated { get; set; }
-		public int Experience { get; set; }
-      
+        public int Experience { get; set; }
+        public virtual ICollection<Advertisement> Advertisements { get; set; }
+
 
     }
 }
