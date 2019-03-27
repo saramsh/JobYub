@@ -22,6 +22,7 @@ namespace JobYub.Data
         public DbSet<JobYub.Models.Tag> Tag { get; set; }
         public DbSet<JobYub.Models.Tarrif> Tarrif { get; set; }
         public DbSet<JobYub.Models.Payment> Payment { get; set; }
+        public DbSet<JobYub.Models.Major> Major { get; set; }
         
     }
 }

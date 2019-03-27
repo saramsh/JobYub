@@ -4,18 +4,20 @@ using JobYub.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace JobYub.Data.Migrations
+namespace JobYub.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190327073041_chnagedb2")]
+    partial class chnagedb2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.3-servicing-35854")
+                .HasAnnotation("ProductVersion", "2.2.2-servicing-10034")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -55,6 +57,10 @@ namespace JobYub.Data.Migrations
 
                     b.Property<double>("Longitude");
 
+                    b.Property<int?>("MajorID");
+
+                    b.Property<string>("MajorIDs");
+
                     b.Property<int>("MaxSalary");
 
                     b.Property<int>("MinSalary");
@@ -86,6 +92,8 @@ namespace JobYub.Data.Migrations
                     b.HasIndex("CityID");
 
                     b.HasIndex("JobCategoryID");
+
+                    b.HasIndex("MajorID");
 
                     b.HasIndex("PaymentID");
 
@@ -143,7 +151,9 @@ namespace JobYub.Data.Migrations
 
                     b.Property<string>("Longtitude");
 
-                    b.Property<string>("Major");
+                    b.Property<string>("MajorID");
+
+                    b.Property<int?>("MajorID1");
 
                     b.Property<string>("MilitaryStatus");
 
@@ -181,6 +191,8 @@ namespace JobYub.Data.Migrations
                     b.HasIndex("CityID");
 
                     b.HasIndex("CompanyTypeID");
+
+                    b.HasIndex("MajorID1");
 
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
@@ -248,6 +260,27 @@ namespace JobYub.Data.Migrations
                     b.HasIndex("ParentCategoryID");
 
                     b.ToTable("JobCategory");
+                });
+
+            modelBuilder.Entity("JobYub.Models.Major", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description");
+
+                    b.Property<string>("Name");
+
+                    b.Property<int>("ParentID");
+
+                    b.Property<int?>("ParentMajorID");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("ParentMajorID");
+
+                    b.ToTable("Major");
                 });
 
             modelBuilder.Entity("JobYub.Models.Payment", b =>
@@ -465,6 +498,10 @@ namespace JobYub.Data.Migrations
                         .HasForeignKey("JobCategoryID")
                         .OnDelete(DeleteBehavior.Cascade);
 
+                    b.HasOne("JobYub.Models.Major")
+                        .WithMany("Advertisements")
+                        .HasForeignKey("MajorID");
+
                     b.HasOne("JobYub.Models.Payment", "Payment")
                         .WithMany()
                         .HasForeignKey("PaymentID");
@@ -494,6 +531,10 @@ namespace JobYub.Data.Migrations
                         .WithMany("Users")
                         .HasForeignKey("CompanyTypeID");
 
+                    b.HasOne("JobYub.Models.Major", "Major")
+                        .WithMany("Users")
+                        .HasForeignKey("MajorID1");
+
                     b.HasOne("JobYub.Models.Region", "Region")
                         .WithMany("Users")
                         .HasForeignKey("RegionID");
@@ -512,6 +553,13 @@ namespace JobYub.Data.Migrations
                     b.HasOne("JobYub.Models.JobCategory", "ParentCategory")
                         .WithMany()
                         .HasForeignKey("ParentCategoryID");
+                });
+
+            modelBuilder.Entity("JobYub.Models.Major", b =>
+                {
+                    b.HasOne("JobYub.Models.Major", "ParentMajor")
+                        .WithMany()
+                        .HasForeignKey("ParentMajorID");
                 });
 
             modelBuilder.Entity("JobYub.Models.Region", b =>

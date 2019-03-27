@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace JobYub.Data.Migrations
+namespace JobYub.Migrations
 {
-    public partial class sdfjhielrunlirkntbd : Migration
+    public partial class chnagedb2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
