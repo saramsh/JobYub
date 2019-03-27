@@ -21,12 +21,40 @@ namespace JobYub.Controllers
         {
             _context = context;
         }
+        [HttpPost]
+        [Route("SearchAsync")]
+        public async Task<ActionResult<List<Advertisement>>> SearchAsync(AdvertisementSearchModel model)
+        {
+            IQueryable<Advertisement> res = _context.Advertisement;
+            
+            if (model.Title != null)
+                res = res.Where(a => a.Title.Contains(model.Title) == true);
 
+            if (model.City != null)
+                res = res.Where(a => a.City.Name.Contains(model.City)==true);
+            if (model.JobCategory != null)
+                res = res.Where(a => a.JobCategory.Name.Contains(model.JobCategory)==true);
+            if (model.Role != null)
+            {
+                
+                res = res;
+            }
+            if (res != null)
+            {
+                return await res.ToListAsync();
+            }
+            else
+            {
+                return NotFound("جستجو نتیجه ای در بر نداشت.");
+            }
+            
+            
+        }
         // GET: api/Advertisements
         [HttpGet]
         public async Task<ActionResult> GetAdvertisement()
         {
-            var res=await _context.Advertisement.ToListAsync();
+            var res=await _context.Advertisement.Where(a=>a.Confirmed==true).ToListAsync();
             if (res != null)
                 return Ok(res);
             else

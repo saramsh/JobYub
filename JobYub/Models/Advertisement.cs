@@ -39,8 +39,6 @@ namespace JobYub.Models
 
 		public double Latitude { get; set; }
 
-		public bool ActivationStatus { get; set; }
-
 		public int JobCategoryID { get; set; }
 
 		public virtual JobCategory JobCategory { get; set; }
@@ -73,7 +71,16 @@ namespace JobYub.Models
         public string ApplicationUserID { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
     }
+
     public enum Gender { male,female,unknown}
 
 	public enum Status { waiting, confirmed, deactive}
+
+    public class AdvertisementSearchModel
+    {
+        public string Title { get; set; }
+        public string City { get; set; }
+        public string JobCategory { get; set; }
+        public string Role { get; set; }
+    }
 }

@@ -49,8 +49,10 @@ namespace JobYub
             {
                 c.SwaggerDoc("v1", new Info { Title = "Jobino API", Version = "v1" });
             });
-            services.Configure<IdentityOptions>(option=> { option.SignIn.RequireConfirmedPhoneNumber = true; });
+            services.Configure<IdentityOptions>(option=> { option.SignIn.RequireConfirmedPhoneNumber = true;  });
+            services.Configure<IdentityUser>(option => { option.TwoFactorEnabled = true; });
             
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
