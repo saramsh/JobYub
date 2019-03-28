@@ -15,7 +15,7 @@ namespace JobYub.Models
         public string HomePhone { get; set; }
         public string Mobile { get; set; }
         public string EducationLevel { get; set; }
-        public string MajorID { get; set; }
+        public int MajorID { get; set; }
 		public virtual Major Major { get; set; }
 		public string MilitaryStatus { get; set; }
         public int? CityID { get; set; }
@@ -33,7 +33,9 @@ namespace JobYub.Models
         public bool Graduated { get; set; }
         public int Experience { get; set; }
         public virtual ICollection<Advertisement> Advertisements { get; set; }
+		//public string VerificationCode { get; set; }
 
 
-    }
+	}
+
 }
