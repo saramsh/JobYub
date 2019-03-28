@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JobYub.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190327071640_chnagedb")]
-    partial class chnagedb
+    [Migration("20190327082138_test2")]
+    partial class test2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,8 +26,6 @@ namespace JobYub.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("ActivationStatus");
 
                     b.Property<short>("Age");
 

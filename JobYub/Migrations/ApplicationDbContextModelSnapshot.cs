@@ -25,8 +25,6 @@ namespace JobYub.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("ActivationStatus");
-
                     b.Property<short>("Age");
 
                     b.Property<string>("ApplicationUserID");

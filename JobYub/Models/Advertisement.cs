@@ -70,6 +70,8 @@ namespace JobYub.Models
 		public string Graduated { get; set; }
         public string ApplicationUserID { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
+
+		public string MajorIDs { get; set; }
     }
 
     public enum Gender { male,female,unknown}

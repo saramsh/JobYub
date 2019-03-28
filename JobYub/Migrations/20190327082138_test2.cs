@@ -2,12 +2,14 @@
 
 namespace JobYub.Migrations
 {
-    public partial class chnagedb2 : Migration
+    public partial class test2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-
-        }
+			migrationBuilder.DropColumn(
+			 name: "Major",
+			 table: "AspNetUsers");
+		}
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
