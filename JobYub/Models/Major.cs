@@ -10,10 +10,9 @@ namespace JobYub.Models
 		public int ID { get; set; }
 		public string Name { get; set; }
 		public string Description { get; set; }
-		public int ParentMajorID { get; set; }
-		public virtual Major ParentMajor { get; set; }
-        public IEnumerable<AdvertisementMajor> advertisementMajors { get; set; }
-        public virtual ICollection<ApplicationUser> Users { get; set; }
-      
+		public int ParentID { get; set; }
+		public virtual Major Parent { get; set; }
+		public virtual ICollection<Advertisement> Advertisements { get; set; }
+		public virtual ICollection<ApplicationUser> Users { get; set; }
 	}
 }

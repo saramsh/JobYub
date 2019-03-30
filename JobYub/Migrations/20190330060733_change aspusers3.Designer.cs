@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JobYub.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190327074933_test")]
-    partial class test
+    [Migration("20190330060733_change aspusers3")]
+    partial class changeaspusers3
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -149,8 +149,7 @@ namespace JobYub.Migrations
 
                     b.Property<string>("Longtitude");
 
-                    b.Property<string>("MajorID");
-
+                    b.Property<int?>("MajorID");
 
                     b.Property<string>("MilitaryStatus");
 
@@ -181,6 +180,8 @@ namespace JobYub.Migrations
                     b.Property<string>("UserName")
                         .HasMaxLength(256);
 
+                    b.Property<string>("VerificationCode");
+
                     b.Property<string>("Website");
 
                     b.HasKey("Id");
@@ -189,7 +190,7 @@ namespace JobYub.Migrations
 
                     b.HasIndex("CompanyTypeID");
 
-                 
+                    b.HasIndex("MajorID");
 
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
@@ -271,11 +272,9 @@ namespace JobYub.Migrations
 
                     b.Property<int>("ParentID");
 
-                    b.Property<int?>("ParentMajorID");
-
                     b.HasKey("ID");
 
-                    b.HasIndex("ParentMajorID");
+                    b.HasIndex("ParentID");
 
                     b.ToTable("Major");
                 });
@@ -528,9 +527,9 @@ namespace JobYub.Migrations
                         .WithMany("Users")
                         .HasForeignKey("CompanyTypeID");
 
-                    //b.HasOne("JobYub.Models.Major", "Major")
-                    //    .WithMany("Users")
-                    //    .HasForeignKey("MajorID1");
+                    b.HasOne("JobYub.Models.Major", "Major")
+                        .WithMany("Users")
+                        .HasForeignKey("MajorID");
 
                     b.HasOne("JobYub.Models.Region", "Region")
                         .WithMany("Users")
@@ -554,9 +553,10 @@ namespace JobYub.Migrations
 
             modelBuilder.Entity("JobYub.Models.Major", b =>
                 {
-                    b.HasOne("JobYub.Models.Major", "ParentMajor")
+                    b.HasOne("JobYub.Models.Major", "Parent")
                         .WithMany()
-                        .HasForeignKey("ParentMajorID");
+                        .HasForeignKey("ParentID")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("JobYub.Models.Region", b =>

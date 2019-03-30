@@ -4,14 +4,16 @@ using JobYub.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace JobYub.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190330055826_change aspuser")]
+    partial class changeaspuser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -147,7 +149,7 @@ namespace JobYub.Migrations
 
                     b.Property<string>("Longtitude");
 
-                    b.Property<int?>("MajorID");
+                    b.Property<int>("MajorID");
 
                     b.Property<string>("MilitaryStatus");
 
@@ -177,8 +179,6 @@ namespace JobYub.Migrations
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256);
-
-                    b.Property<string>("VerificationCode");
 
                     b.Property<string>("Website");
 
@@ -527,7 +527,8 @@ namespace JobYub.Migrations
 
                     b.HasOne("JobYub.Models.Major", "Major")
                         .WithMany("Users")
-                        .HasForeignKey("MajorID");
+                        .HasForeignKey("MajorID")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("JobYub.Models.Region", "Region")
                         .WithMany("Users")
