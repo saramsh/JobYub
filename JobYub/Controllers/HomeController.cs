@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using JobYub.Models;
 using Microsoft.AspNetCore.Authorization;
+using RestSharp;
+using Microsoft.Extensions.Configuration;
+using JobYub.Helpers;
 
 namespace JobYub.Controllers
 {
@@ -19,6 +22,9 @@ namespace JobYub.Controllers
         [HttpGet]
         public IActionResult Privacy()
         {
+            AuthMessageSender s = new AuthMessageSender();
+             s.SendSmsAsync("9010596159", "test again");
+
             return View();
         }
         [HttpGet]

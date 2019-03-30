@@ -23,7 +23,7 @@ namespace JobYub.Models
 
 		public int Experience { get; set; }
 
-		public string CollaborationType { get; set; }
+		public CollaborationType CollaborationType { get; set; }
 
 		public int MinSalary { get; set; }
 
@@ -71,9 +71,9 @@ namespace JobYub.Models
         public string ApplicationUserID { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
 
-		public string MajorIDs { get; set; }
+		public virtual IEnumerable<AdvertisementMajor> AdvertisementMajors { get; set; }
     }
-
+    public enum CollaborationType {parttime, fulltime,  both }
     public enum Gender { male,female,unknown}
 
 	public enum Status { waiting, confirmed, deactive}
