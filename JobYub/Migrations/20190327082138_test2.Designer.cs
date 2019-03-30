@@ -151,7 +151,7 @@ namespace JobYub.Migrations
 
                     b.Property<string>("MajorID");
 
-                    b.Property<int?>("MajorID1");
+                   
 
                     b.Property<string>("MilitaryStatus");
 
@@ -190,7 +190,7 @@ namespace JobYub.Migrations
 
                     b.HasIndex("CompanyTypeID");
 
-                    b.HasIndex("MajorID1");
+                   
 
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");

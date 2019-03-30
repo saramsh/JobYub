@@ -15,6 +15,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using JobYub.Models;
 using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using JobYub.Helpers;
 
 namespace JobYub
 {
@@ -51,8 +53,9 @@ namespace JobYub
             });
             services.Configure<IdentityOptions>(option=> { option.SignIn.RequireConfirmedPhoneNumber = true;  });
             services.Configure<IdentityUser>(option => { option.TwoFactorEnabled = true; });
-            
 
+           // services.AddTransient<IEmailSender, AuthMessageSender>();
+            services.AddTransient<ISmsSender, AuthMessageSender>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
