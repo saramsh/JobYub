@@ -10,7 +10,8 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-
+using JobYub.Data;
+using System.Linq;
 
 namespace JobYub.Areas.Identity.Pages.Account
 {
@@ -22,8 +23,9 @@ namespace JobYub.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+		private ApplicationDbContext _context;
 
-        public RegisterModel(
+		public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
@@ -33,7 +35,8 @@ namespace JobYub.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
-        }
+			//_context = new ApplicationDbContext();
+		}
 
         [BindProperty]
         public InputModel Input { get; set; }
@@ -99,7 +102,9 @@ namespace JobYub.Areas.Identity.Pages.Account
             returnUrl = returnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
             {
-				//var user = new ApplicationUser { UserName = string.IsNullOrEmpty( Input.Email)? "unknown":Input.Email, Email = Input.Email , Mobile=Input.Mobile, PasswordHash=Input.Password, CityID=Input.CityID,Company=Input.CompanyName, CompanyTypeID=Input.CompanyTypeID, Graduated=Input.Graduated, EducationLevel=Input.EdcationLevel, MajorID=Input.MajorID};
+				//var user = new ApplicationUser { UserName = string.IsNullOrEmpty( Input.Email)? "unknown":Input.Email, Email = Input.Email , Mobile=Input.Mobile, PasswordHash=Input.Password, CityID=Input.CityID,Company=Input.CompanyName, CompanyTypeID=Input.CompanyTypeID, Graduated=Input.Graduated, EducationLevel=Input.EdcationLevel, MajorID=Input.MajorID};			
+			//	var userQuery = _context.ApplicationUser.Where(u => u.Mobile == Input.Mobile).Single();
+				//if (ApplicationUser)
 				var user = new ApplicationUser { UserName = string.IsNullOrEmpty(Input.Email) ? "unknown" : Input.Email, Mobile = Input.Mobile};
 				// var result = await _userManager.CreateAsync(user, Input.Password);
 				var result = await _userManager.CreateAsync(user);
@@ -108,7 +113,7 @@ namespace JobYub.Areas.Identity.Pages.Account
 					
                     _logger.LogInformation("User created a new account with password.");
 
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 					//var callbackUrl = Url.Page(
 					//    "/Account/ConfirmEmail",
 					//    pageHandler: null,
@@ -120,7 +125,7 @@ namespace JobYub.Areas.Identity.Pages.Account
 
 					//await _signInManager.SignInAsync(user, isPersistent: false);
 					// return LocalRedirect(returnUrl);
-					return new JsonResult(int.Parse( code));
+					return new JsonResult(int.Parse( "1234"));
                 }
                 foreach (var error in result.Errors)
                 {

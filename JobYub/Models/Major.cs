@@ -11,7 +11,7 @@ namespace JobYub.Models
 		public string Name { get; set; }
 		public string Description { get; set; }
 		public int ParentID { get; set; }
-		public virtual Major ParentMajor { get; set; }
+		public virtual Major Parent { get; set; }
 		public virtual ICollection<Advertisement> Advertisements { get; set; }
 		public virtual ICollection<ApplicationUser> Users { get; set; }
 	}
