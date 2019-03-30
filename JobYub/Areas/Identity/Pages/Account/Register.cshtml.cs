@@ -15,36 +15,37 @@ using System.Linq;
 
 namespace JobYub.Areas.Identity.Pages.Account
 {
-    [AllowAnonymous]
-	[IgnoreAntiforgeryToken(Order =1001)]
-    public class RegisterModel : PageModel
-    {
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ILogger<RegisterModel> _logger;
-        private readonly IEmailSender _emailSender;
+	[AllowAnonymous]
+	[IgnoreAntiforgeryToken(Order = 1001)]
+	public class RegisterModel : PageModel
+	{
+		private readonly SignInManager<ApplicationUser> _signInManager;
+		private readonly UserManager<ApplicationUser> _userManager;
+		private readonly ILogger<RegisterModel> _logger;
+		private readonly IEmailSender _emailSender;
 		private ApplicationDbContext _context;
 
 		public RegisterModel(
-            UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
-            ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
-        {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _logger = logger;
-            _emailSender = emailSender;
-			//_context = new ApplicationDbContext();
+			UserManager<ApplicationUser> userManager,
+			SignInManager<ApplicationUser> signInManager,
+			ILogger<RegisterModel> logger,
+			IEmailSender emailSender, ApplicationDbContext context)
+		{
+			_userManager = userManager;
+			_signInManager = signInManager;
+			_logger = logger;
+			_emailSender = emailSender;
+			//_context = new ApplicationDbContext(new Microsoft.EntityFrameworkCore.DbContextOptions<ApplicationDbContext>());
+			_context = context;
 		}
 
-        [BindProperty]
-        public InputModel Input { get; set; }
+		[BindProperty]
+		public InputModel Input { get; set; }
 
-        public string ReturnUrl { get; set; }
+		public string ReturnUrl { get; set; }
 
-        public class InputModel
-        {
+		public class InputModel
+		{
 			//[Required]
 			//[StringLength(11, ErrorMessage = "The must be at least {2} and at max {1} characters long.", MinimumLength = 11)]
 			[Display(Name = "Mobile")]
@@ -52,20 +53,20 @@ namespace JobYub.Areas.Identity.Pages.Account
 
 			//[Required]
 			[EmailAddress]
-            [Display(Name = "Email")]
-            public string Email { get; set; }
+			[Display(Name = "Email")]
+			public string Email { get; set; }
 
 
 			//[Required]
 			[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
-            [DataType(DataType.Password)]
-            [Display(Name = "Password")]
-            public string Password { get; set; }
+			[DataType(DataType.Password)]
+			[Display(Name = "Password")]
+			public string Password { get; set; }
 
-            [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-            public string ConfirmPassword { get; set; }
+			[DataType(DataType.Password)]
+			[Display(Name = "Confirm password")]
+			[Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+			public string ConfirmPassword { get; set; }
 
 			//register required fields for employee and employer
 			[Display(Name = "City")]
@@ -89,52 +90,61 @@ namespace JobYub.Areas.Identity.Pages.Account
 			[Display(Name = "Major")]
 			public int MajorID { get; set; }
 
-			
+
 		}
 
-        public void OnGet(string returnUrl = null)
-        {
-            ReturnUrl = returnUrl;
-        }
+		public void OnGet(string returnUrl = null)
+		{
+			ReturnUrl = returnUrl;
+		}
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
-        {
-            returnUrl = returnUrl ?? Url.Content("~/");
-            if (ModelState.IsValid)
-            {
-				//var user = new ApplicationUser { UserName = string.IsNullOrEmpty( Input.Email)? "unknown":Input.Email, Email = Input.Email , Mobile=Input.Mobile, PasswordHash=Input.Password, CityID=Input.CityID,Company=Input.CompanyName, CompanyTypeID=Input.CompanyTypeID, Graduated=Input.Graduated, EducationLevel=Input.EdcationLevel, MajorID=Input.MajorID};			
-			//	var userQuery = _context.ApplicationUser.Where(u => u.Mobile == Input.Mobile).Single();
-				//if (ApplicationUser)
-				var user = new ApplicationUser { UserName = string.IsNullOrEmpty(Input.Email) ? "unknown" : Input.Email, Mobile = Input.Mobile};
-				// var result = await _userManager.CreateAsync(user, Input.Password);
-				var result = await _userManager.CreateAsync(user);
-				if (result.Succeeded)
-                {
-					
-                    _logger.LogInformation("User created a new account with password.");
+		public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+		{
+			returnUrl = returnUrl ?? Url.Content("~/");
+			if (ModelState.IsValid)
+			{
+				//var user = new ApplicationUser { UserName = string.IsNullOrEmpty( Input.Email)? "unknown":Input.Email, Email = Input.Email , Mobile=Input.Mobile, PasswordHash=Input.Password, CityID=Input.CityID,Company=Input.CompanyName, CompanyTypeID=Input.CompanyTypeID, Graduated=Input.Graduated, EducationLevel=Input.EdcationLevel, MajorID=Input.MajorID};
+				if (Input.Mobile != null)
+				{
+					var user = _context.ApplicationUser.Where(u => u.Mobile == Input.Mobile).Single();
+					if (user == null)
+					{
+						user = new ApplicationUser { UserName = string.IsNullOrEmpty(Input.Email) ? "unknown" : Input.Email, Mobile = Input.Mobile };
+						var result = await _userManager.CreateAsync(user);
+						if (result.Succeeded)
+						{
 
-                    //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-					//var callbackUrl = Url.Page(
-					//    "/Account/ConfirmEmail",
-					//    pageHandler: null,
-					//    values: new { userId = user.Id, code = code },
-					//    protocol: Request.Scheme);
+							_logger.LogInformation("User created a new account with password.");
 
-					//await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-					//    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+							//var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+							//var callbackUrl = Url.Page(
+							//    "/Account/ConfirmEmail",
+							//    pageHandler: null,
+							//    values: new { userId = user.Id, code = code },
+							//    protocol: Request.Scheme);
 
-					//await _signInManager.SignInAsync(user, isPersistent: false);
-					// return LocalRedirect(returnUrl);
-					return new JsonResult(int.Parse( "1234"));
-                }
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
-            }
+							//await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+							//    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-            // If we got this far, something failed, redisplay form
-            return Page();
-        }
-    }
+							//await _signInManager.SignInAsync(user, isPersistent: false);
+							// return LocalRedirect(returnUrl);
+							return new JsonResult(int.Parse("1234"));
+						}
+						foreach (var error in result.Errors)
+						{
+							ModelState.AddModelError(string.Empty, error.Description);
+						}
+					}
+					return new JsonResult(int.Parse("1234"));
+
+					// var result = await _userManager.CreateAsync(user, Input.Password);
+				}
+
+				// If we got this far, something failed, redisplay form
+				return Page();
+			}
+			return Page();
+		}
+
+	}
 }
