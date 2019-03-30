@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using JobYub.Data;
 using System.Linq;
+using JobYub.Helpers;
 
 namespace JobYub.Areas.Identity.Pages.Account
 {
@@ -48,17 +49,21 @@ namespace JobYub.Areas.Identity.Pages.Account
 		{
 			//[Required]
 			//[StringLength(11, ErrorMessage = "The must be at least {2} and at max {1} characters long.", MinimumLength = 11)]
-			[Display(Name = "Mobile")]
-			public string Mobile { get; set; }
+			//[Display(Name = "Mobile")]
+			//public string Mobile { get; set; }
 
-			//[Required]
-			[EmailAddress]
+            [Display(Name = "PhoneNumber")]
+            public string PhoneNumber { get; set; }
+
+            //[Required]
+            [EmailAddress]
 			[Display(Name = "Email")]
 			public string Email { get; set; }
 
-
-			//[Required]
-			[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [MaxLength(4)]
+            public string VerificationCode { get; set; }
+                                             
+            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
 			[DataType(DataType.Password)]
 			[Display(Name = "Password")]
 			public string Password { get; set; }
@@ -101,15 +106,17 @@ namespace JobYub.Areas.Identity.Pages.Account
 		public async Task<IActionResult> OnPostAsync(string returnUrl = null)
 		{
 			returnUrl = returnUrl ?? Url.Content("~/");
-			if (ModelState.IsValid)
+           //await _userManager.CreateAsync(new ApplicationUser() { Email = "a@a.com", PhoneNumber = "9010596159", UserName = "a@a.com",EmailConfirmed=true,PhoneNumberConfirmed=true }, "A@aaa1");
+            if (ModelState.IsValid)
 			{
 				//var user = new ApplicationUser { UserName = string.IsNullOrEmpty( Input.Email)? "unknown":Input.Email, Email = Input.Email , Mobile=Input.Mobile, PasswordHash=Input.Password, CityID=Input.CityID,Company=Input.CompanyName, CompanyTypeID=Input.CompanyTypeID, Graduated=Input.Graduated, EducationLevel=Input.EdcationLevel, MajorID=Input.MajorID};
-				if (Input.Mobile != null)
+				if (Input.PhoneNumber != null)
 				{
-					var user = _context.ApplicationUser.Where(u => u.Mobile == Input.Mobile).Single();
-					if (user == null)
+					var user = _context.ApplicationUser.FirstOrDefault(u => u.PhoneNumber == Input.PhoneNumber);
+
+                    if (user == null)
 					{
-						user = new ApplicationUser { UserName = string.IsNullOrEmpty(Input.Email) ? "unknown" : Input.Email, Mobile = Input.Mobile };
+						user = new ApplicationUser { UserName = string.IsNullOrEmpty(Input.Email) ? "unknown" : Input.Email,PhoneNumber=Input.PhoneNumber};
 						var result = await _userManager.CreateAsync(user);
 						if (result.Succeeded)
 						{
@@ -128,23 +135,80 @@ namespace JobYub.Areas.Identity.Pages.Account
 
 							//await _signInManager.SignInAsync(user, isPersistent: false);
 							// return LocalRedirect(returnUrl);
-							return new JsonResult(int.Parse("1234"));
+							//return new JsonResult(int.Parse("1234"));
 						}
 						foreach (var error in result.Errors)
 						{
 							ModelState.AddModelError(string.Empty, error.Description);
 						}
 					}
-					return new JsonResult(int.Parse("1234"));
+                    user.VerificationCode =await _userManager.GenerateChangePhoneNumberTokenAsync(user, user.PhoneNumber);
+                    await _context.SaveChangesAsync();
+                    AuthMessageSender s = new AuthMessageSender();
+                    await s.SendSmsAsync(user.PhoneNumber, user.VerificationCode);
+                    
+                    //var resul = await _signInManager.PasswordSignInAsync("a@a.com", "A@aaa1", false, lockoutOnFailure: true);
+                   
+
+               
+                    
+                    
+                    // var ty= await  _signInManager.CanSignInAsync(us);
+                    //var s= User.Identity.IsAuthenticated;
+                   //  return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl});
+                  //  return StatusCode(200);
+
+                   // return new JsonResult(int.Parse("1234"));
 
 					// var result = await _userManager.CreateAsync(user, Input.Password);
 				}
 
+
+
+
 				// If we got this far, something failed, redisplay form
 				return Page();
 			}
+
+
 			return Page();
 		}
+        public async Task<IActionResult> OnPutAsync( string returnurl=null)
+        {
+            ApplicationUser user= _context.ApplicationUser.FirstOrDefault(u => u.PhoneNumber == Input.PhoneNumber);
+            if (user != null)
+            {
 
-	}
+
+                if (user.VerificationCode ==Input.VerificationCode)
+                {
+                    user.AccessFailedCount = 0;
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    string g = await _userManager.GetAuthenticationTokenAsync(user, "test", "token");
+                    OkObjectResult s = new OkObjectResult(g);
+                    return s;
+                    
+                }
+                else
+                {
+                    user.AccessFailedCount++;
+                    return BadRequest("The Verification Code is not true;");
+                }
+            }
+            else
+            {
+                return NotFound("Phone has not found;");
+            }
+        }
+     
+        
+        
+        
+      
+
+
+
+
+
+    }
 }
