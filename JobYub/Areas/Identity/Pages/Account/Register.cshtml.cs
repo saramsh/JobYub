@@ -13,18 +13,26 @@ using Microsoft.Extensions.Logging;
 using JobYub.Data;
 using System.Linq;
 using JobYub.Helpers;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+using Microsoft.Extensions.Configuration;
 
 namespace JobYub.Areas.Identity.Pages.Account
 {
 	[AllowAnonymous]
 	[IgnoreAntiforgeryToken(Order = 1001)]
+    
 	public class RegisterModel : PageModel
 	{
 		private readonly SignInManager<ApplicationUser> _signInManager;
 		private readonly UserManager<ApplicationUser> _userManager;
 		private readonly ILogger<RegisterModel> _logger;
 		private readonly IEmailSender _emailSender;
-		private ApplicationDbContext _context;
+        private readonly string _Secret;
+        private ApplicationDbContext _context;
+
 
 		public RegisterModel(
 			UserManager<ApplicationUser> userManager,
@@ -32,13 +40,23 @@ namespace JobYub.Areas.Identity.Pages.Account
 			ILogger<RegisterModel> logger,
 			IEmailSender emailSender, ApplicationDbContext context)
 		{
-			_userManager = userManager;
+
+            _userManager = userManager;
 			_signInManager = signInManager;
 			_logger = logger;
 			_emailSender = emailSender;
 			//_context = new ApplicationDbContext(new Microsoft.EntityFrameworkCore.DbContextOptions<ApplicationDbContext>());
 			_context = context;
-		}
+            IConfigurationBuilder builder = new ConfigurationBuilder()
+        .SetBasePath(System.IO.Directory.GetCurrentDirectory())
+        .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
+            IConfigurationRoot configuration = builder.Build();
+            // configurationSection.Key => FilePath
+            // configurationSection.Value => C:\\temp\\logs\\output.txt
+            _Secret = configuration.GetSection("AppSettings").GetSection("Secret").Value;
+          
+        }
 
 		[BindProperty]
 		public InputModel Input { get; set; }
@@ -188,7 +206,25 @@ namespace JobYub.Areas.Identity.Pages.Account
                     user.AccessFailedCount = 0;
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     string g = await _userManager.GetAuthenticationTokenAsync(user, "test", "token");
-                    OkObjectResult s = new OkObjectResult(g);
+                   
+
+                    ///////////////////////////////////
+                    var tokenHandler = new JwtSecurityTokenHandler();
+                    var key = Encoding.ASCII.GetBytes(_Secret);
+                    var tokenDescriptor = new SecurityTokenDescriptor
+                    {
+                        Subject = new ClaimsIdentity(new Claim[]
+                        {
+                    new Claim(ClaimTypes.Name, user.Id.ToString())
+                        }),
+                        Expires = DateTime.UtcNow.AddDays(7),
+                        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                    };
+                    var token = tokenHandler.CreateToken(tokenDescriptor);
+                    user.Token = tokenHandler.WriteToken(token);
+
+                    ////////////////////////////////////////////
+                    OkObjectResult s = new OkObjectResult(user.Token);
                     return s;
                     
                 }

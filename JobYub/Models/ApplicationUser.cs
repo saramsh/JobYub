@@ -34,8 +34,9 @@ namespace JobYub.Models
         public int Experience { get; set; }
         public virtual ICollection<Advertisement> Advertisements { get; set; }
 		public string VerificationCode { get; set; }
+        public string Token { get; set; }
 
 
-	}
+    }
 
 }
