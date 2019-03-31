@@ -93,7 +93,7 @@ namespace JobYub.Models
 	public class KeywordSearchModel
 	{
 		public string keyword { get; set; }
-		public int AdvertisementType { get; set; }
+		public AdvertisementType AdvertisementType { get; set; }
 	}
 
 	public class SearchModel

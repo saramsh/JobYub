@@ -147,7 +147,7 @@ namespace JobYub.Controllers
 		public async Task<ActionResult> SearchAdvertisementByKeyword(KeywordSearchModel keywordSearchModel )
 		{
 
-			var res =  _context.Advertisement.Where(adds =>  adds.Title == '%' + keywordSearchModel.keyword + '%' || adds.Description == '%' + keywordSearchModel.keyword + '%').FirstOrDefault();
+			var res =  _context.Advertisement.Where(adds =>adds.advertisementType==keywordSearchModel.AdvertisementType && adds.status==Status.confirmed && (  adds.Title.ToLower().Contains(keywordSearchModel.keyword.ToLower()) || adds.Description.ToLower().Contains(keywordSearchModel.keyword.ToLower()))).FirstOrDefault();
 			//addtype
 			if (res != null)
 				return Ok(res);
@@ -156,17 +156,19 @@ namespace JobYub.Controllers
 
 		}
 
-		//public async Task<ActionResult> SearchAdvertisementByKeyword(int advertisementType, string keyword)
-		//{
+		[Route("/Advertisements/Search")]
+		public async Task<ActionResult> SearchAdvertisement(KeywordSearchModel keywordSearchModel)
+		{
 
-		//	var res = _context.Advertisement.Where(adds => adds.Title == '%' + keyword + '%' || adds.Description == '%' + keyword + '%').FirstOrDefault();
-		//	if (res != null)
-		//		return Ok(res);
-		//	else
-		//		return NotFound();
+			var res = _context.Advertisement.Where(adds => adds.advertisementType == keywordSearchModel.AdvertisementType && (adds.Title.ToLower().Contains(keywordSearchModel.keyword.ToLower()) || adds.Description.ToLower().Contains(keywordSearchModel.keyword.ToLower()))).FirstOrDefault();
+			//addtype
+			if (res != null)
+				return Ok(res);
+			else
+				return NotFound();
 
-		//}
-		
+		}
+
 
 	}
 }
