@@ -6,15 +6,15 @@ namespace JobYub.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "advertisementType1",
-                table: "Advertisement");
+            //migrationBuilder.DropColumn(
+            //    name: "advertisementType1",
+            //    table: "Advertisement");
 
-            migrationBuilder.AddColumn<int>(
-                name: "advertisementType",
-                table: "Advertisement",
-                nullable: false,
-                defaultValue: 0);
+            //migrationBuilder.AddColumn<int>(
+            //    name: "advertisementType",
+            //    table: "Advertisement",
+            //    nullable: false,
+            //    defaultValue: 0);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
