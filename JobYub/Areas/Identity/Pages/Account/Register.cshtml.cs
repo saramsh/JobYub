@@ -135,7 +135,7 @@ namespace JobYub.Areas.Identity.Pages.Account
 
                     if (user == null)
 					{
-						user = new ApplicationUser { UserName = string.IsNullOrEmpty(Input.Email) ? "unknown" : Input.Email,PhoneNumber=Input.PhoneNumber};
+						user = new ApplicationUser { UserName = string.IsNullOrEmpty(Input.Email) ? Guid.NewGuid().ToString() : Input.Email,PhoneNumber=Input.PhoneNumber};
 						var result = await _userManager.CreateAsync(user);
 						if (result.Succeeded)
 						{

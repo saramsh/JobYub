@@ -12,6 +12,8 @@
     <Compile Remove="Migrations\20190328050331_ofij.Designer.cs" />
     <Compile Remove="Migrations\20190331062507_addtokentouser.cs" />
     <Compile Remove="Migrations\20190331062507_addtokentouser.Designer.cs" />
+    <Compile Remove="Migrations\20190331090431_asdasd.cs" />
+    <Compile Remove="Migrations\20190331090431_asdasd.Designer.cs" />
   </ItemGroup>
 
 

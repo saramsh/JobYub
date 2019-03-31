@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using JobYub.Data;
 using JobYub.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Reflection;
 
 namespace JobYub.Controllers
 {
@@ -146,9 +147,11 @@ namespace JobYub.Controllers
 		[Route("/Advertisements/SearchByKeyword")]
 		public async Task<ActionResult> SearchAdvertisementByKeyword(KeywordSearchModel keywordSearchModel )
 		{
+           
 
 			var res =  _context.Advertisement.Where(adds =>adds.advertisementType==keywordSearchModel.AdvertisementType && adds.status==Status.confirmed && (  adds.Title.ToLower().Contains(keywordSearchModel.keyword.ToLower()) || adds.Description.ToLower().Contains(keywordSearchModel.keyword.ToLower()))).FirstOrDefault();
-			//addtype
+			 
+            //addtype
 			if (res != null)
 				return Ok(res);
 			else
@@ -169,6 +172,31 @@ namespace JobYub.Controllers
 
 		}
 
+        static bool CheckAllFields<TInput, TValue>(TInput input, TValue value, bool alsoCheckProperties)
+        {
+            Type t = typeof(TInput);
+            //ICollection<Advertisement>
 
-	}
+            foreach (FieldInfo info in t.GetFields().Where(x => x.FieldType == typeof(TValue)))
+            {
+                if (info.GetValue(input).ToString().Contains(value.ToString()))
+                {
+                    return false;
+                }
+            }
+            if (alsoCheckProperties)
+            {
+                foreach (PropertyInfo info in t.GetProperties().Where(x => x.PropertyType == typeof(TValue)))
+                {
+                    if (!info.GetValue(input, null).Equals(value))
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+
+    }
 }
