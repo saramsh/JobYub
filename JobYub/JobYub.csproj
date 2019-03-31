@@ -7,13 +7,6 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Migrations\20190328050331_ofij.cs" />
-    <Compile Remove="Migrations\20190328050331_ofij.Designer.cs" />
-    <Compile Remove="Migrations\20190331062507_addtokentouser.cs" />
-    <Compile Remove="Migrations\20190331062507_addtokentouser.Designer.cs" />
-  </ItemGroup>
-
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />

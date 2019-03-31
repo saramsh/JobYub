@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JobYub.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190330060733_change aspusers3")]
-    partial class changeaspusers3
+    [Migration("20190331091416_test6")]
+    partial class test6
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,7 +33,7 @@ namespace JobYub.Migrations
 
                     b.Property<int>("CityID");
 
-                    b.Property<string>("CollaborationType");
+                    b.Property<int>("CollaborationType");
 
                     b.Property<bool>("Confirmed");
 
@@ -57,8 +57,6 @@ namespace JobYub.Migrations
 
                     b.Property<int?>("MajorID");
 
-                    b.Property<string>("MajorIDs");
-
                     b.Property<int>("MaxSalary");
 
                     b.Property<int>("MinSalary");
@@ -81,6 +79,8 @@ namespace JobYub.Migrations
 
                     b.Property<string>("Title");
 
+                    b.Property<int>("advertisementType");
+
                     b.Property<int>("status");
 
                     b.HasKey("ID");
@@ -102,6 +102,25 @@ namespace JobYub.Migrations
                     b.HasIndex("TarrifID");
 
                     b.ToTable("Advertisement");
+                });
+
+            modelBuilder.Entity("JobYub.Models.AdvertisementMajor", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AdvertisementID");
+
+                    b.Property<int>("MajorID");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("AdvertisementID");
+
+                    b.HasIndex("MajorID");
+
+                    b.ToTable("AdvertisementMajor");
                 });
 
             modelBuilder.Entity("JobYub.Models.ApplicationUser", b =>
@@ -174,6 +193,8 @@ namespace JobYub.Migrations
                     b.Property<byte[]>("Resume");
 
                     b.Property<string>("SecurityStamp");
+
+                    b.Property<string>("Token");
 
                     b.Property<bool>("TwoFactorEnabled");
 
@@ -514,6 +535,19 @@ namespace JobYub.Migrations
                     b.HasOne("JobYub.Models.Tarrif", "Tarrif")
                         .WithMany("Advertisements")
                         .HasForeignKey("TarrifID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("JobYub.Models.AdvertisementMajor", b =>
+                {
+                    b.HasOne("JobYub.Models.Advertisement", "Advertisement")
+                        .WithMany("AdvertisementMajors")
+                        .HasForeignKey("AdvertisementID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("JobYub.Models.Major", "Major")
+                        .WithMany()
+                        .HasForeignKey("MajorID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
