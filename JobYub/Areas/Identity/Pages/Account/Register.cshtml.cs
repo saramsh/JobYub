@@ -201,31 +201,31 @@ namespace JobYub.Areas.Identity.Pages.Account
             {
 
 
-                if (user.VerificationCode ==Input.VerificationCode&&Input.VerificationCode!="")
-                {
-                    user.AccessFailedCount = 0;
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    string g = await _userManager.GetAuthenticationTokenAsync(user, "test", "token");
-                   
-                    
-                    ///////////////////////////////////
-                    var tokenHandler = new JwtSecurityTokenHandler();
-                    var key = Encoding.ASCII.GetBytes(_Secret);
-                    var tokenDescriptor = new SecurityTokenDescriptor
-                    {
-                        Subject = new ClaimsIdentity(new Claim[]
-                        {
-                    new Claim(ClaimTypes.Name, user.Id.ToString())
-                        }),
-                        Expires = DateTime.UtcNow.AddDays(7),
-                        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-                    };
-                    var token = tokenHandler.CreateToken(tokenDescriptor);
-                    user.Token = tokenHandler.WriteToken(token);
-                    user.VerificationCode = "";
-                    await _context.SaveChangesAsync();
-                    ////////////////////////////////////////////
-                    OkObjectResult s = new OkObjectResult(user.Token);
+				if (user.VerificationCode == Input.VerificationCode && Input.VerificationCode != "")
+				{
+					user.AccessFailedCount = 0;
+					await _signInManager.SignInAsync(user, isPersistent: false);
+					string g = await _userManager.GetAuthenticationTokenAsync(user, "test", "token");
+
+
+					///////////////////////////////////
+					var tokenHandler = new JwtSecurityTokenHandler();
+					var key = Encoding.ASCII.GetBytes(_Secret);
+					var tokenDescriptor = new SecurityTokenDescriptor
+					{
+						Subject = new ClaimsIdentity(new Claim[]
+						{
+					new Claim(ClaimTypes.Name, user.Id.ToString())
+						}),
+						Expires = DateTime.UtcNow.AddDays(7),
+						SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+					};
+					var token = tokenHandler.CreateToken(tokenDescriptor);
+					user.Token = tokenHandler.WriteToken(token);
+					user.VerificationCode = "";
+					await _context.SaveChangesAsync();
+					////////////////////////////////////////////
+					OkObjectResult s = new OkObjectResult(new { Token=user.Token,ID=user.Id});
                     return s;
                     
                 }
