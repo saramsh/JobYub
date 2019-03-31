@@ -72,13 +72,16 @@ namespace JobYub.Models
         public virtual ApplicationUser ApplicationUser { get; set; }
 
 		public virtual IEnumerable<AdvertisementMajor> AdvertisementMajors { get; set; }
+
+		public 
     }
     public enum CollaborationType {parttime, fulltime,  both }
     public enum Gender { male,female,unknown}
 
 	public enum Status { waiting, confirmed, deactive}
+	public enum Type { employerAdds, employeeAdds }
 
-    public class AdvertisementSearchModel
+	public class AdvertisementSearchModel
     {
         public string Title { get; set; }
         public string City { get; set; }

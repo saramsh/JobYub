@@ -142,5 +142,46 @@ namespace JobYub.Controllers
         {
             return _context.Advertisement.Any(e => e.ID == id);
         }
-    }
+
+		[Route("/Advertisements/SearchByKeyword")]
+		public async Task<ActionResult> SearchAdvertisementByKeyword(KeywordSearchModel keywordSearchModel )
+		{
+
+			var res =  _context.Advertisement.Where(adds =>  adds.Title == '%' + keywordSearchModel.keyword + '%' || adds.Description == '%' + keywordSearchModel.keyword + '%').FirstOrDefault();
+			//addtype
+			if (res != null)
+				return Ok(res);
+			else
+				return NotFound();
+
+		}
+
+		//public async Task<ActionResult> SearchAdvertisementByKeyword(int advertisementType, string keyword)
+		//{
+
+		//	var res = _context.Advertisement.Where(adds => adds.Title == '%' + keyword + '%' || adds.Description == '%' + keyword + '%').FirstOrDefault();
+		//	if (res != null)
+		//		return Ok(res);
+		//	else
+		//		return NotFound();
+
+		//}
+		public class KeywordSearchModel
+		{
+			public string keyword { get; set; }
+			public int AdvertisementType { get; set; }
+		}
+
+		public class SearchModel
+		{
+			public int AdvertisementType { get; set; }
+			public int Experience { get; set; }
+			public int Salary { get; set; }
+			public int CollaborationTypeID { get; set; }
+			public int gender { get; set; }
+			public string EducationLevel { get; set; }
+
+		}
+
+	}
 }

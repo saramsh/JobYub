@@ -109,13 +109,14 @@ namespace JobYub.Areas.Identity.Pages.Account
 					var user = _context.ApplicationUser.Where(u => u.Mobile == Input.Mobile).Single();
 					if (user == null)
 					{
-						user = new ApplicationUser { UserName = string.IsNullOrEmpty(Input.Email) ? "unknown" : Input.Email, Mobile = Input.Mobile };
+						user = new ApplicationUser { UserName = string.IsNullOrEmpty(Input.Email) ? "unknown" : Input.Email, PhoneNumber = Input.Mobile };
+						var code= _userManager.GenerateChangePhoneNumberTokenAsync(user, Input.Mobile);
 						var result = await _userManager.CreateAsync(user);
 						if (result.Succeeded)
 						{
 
 							_logger.LogInformation("User created a new account with password.");
-
+						
 							//var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 							//var callbackUrl = Url.Page(
 							//    "/Account/ConfirmEmail",
@@ -136,7 +137,7 @@ namespace JobYub.Areas.Identity.Pages.Account
 						}
 					}
 					return new JsonResult(int.Parse("1234"));
-
+			
 					// var result = await _userManager.CreateAsync(user, Input.Password);
 				}
 

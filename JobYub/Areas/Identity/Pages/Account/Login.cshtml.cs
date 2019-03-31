@@ -79,19 +79,19 @@ namespace JobYub.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
-
             if (ModelState.IsValid)
             {
 				var user = _context.ApplicationUser.Where(u => u.Mobile == Input.Mobile).Single();
-				//var authenticatorCode = Input.TwoFactorCode.Replace(" ", string.Empty).Replace("-", string.Empty);
 				// This doesn't count login failures towards account lockout
 				// To enable password failures to trigger account lockout, set lockoutOnFailure: true
 				//var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: true);
 				if (user!=null)
 				{ 
+					//_signInManager.signin
 					await _signInManager.SignInAsync(user, isPersistent: false);
 				//if (result.Succeeded)
     //            {
+
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);
                 }
