@@ -23,6 +23,8 @@ namespace JobYub.Models
 
 		public int Experience { get; set; }
 
+	//	public int MajorId { get; set; }
+
 		public CollaborationType CollaborationType { get; set; }
 
 		public int MinSalary { get; set; }

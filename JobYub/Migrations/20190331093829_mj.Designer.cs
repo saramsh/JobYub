@@ -4,14 +4,16 @@ using JobYub.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace JobYub.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190331093829_mj")]
+    partial class mj
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,7 +55,7 @@ namespace JobYub.Migrations
 
                     b.Property<double>("Longitude");
 
-                    b.Property<int>("MajorId");
+                    b.Property<int?>("MajorID");
 
                     b.Property<int>("MaxSalary");
 
@@ -89,7 +91,7 @@ namespace JobYub.Migrations
 
                     b.HasIndex("JobCategoryID");
 
-                    b.HasIndex("MajorId");
+                    b.HasIndex("MajorID");
 
                     b.HasIndex("PaymentID");
 
@@ -515,8 +517,7 @@ namespace JobYub.Migrations
 
                     b.HasOne("JobYub.Models.Major")
                         .WithMany("Advertisements")
-                        .HasForeignKey("MajorId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("MajorID");
 
                     b.HasOne("JobYub.Models.Payment", "Payment")
                         .WithMany()

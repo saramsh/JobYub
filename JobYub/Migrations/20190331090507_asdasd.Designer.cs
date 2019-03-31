@@ -4,18 +4,20 @@ using JobYub.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace JobYub.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190331090507_asdasd")]
+    partial class asdasd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.2-servicing-10034")
+                .HasAnnotation("ProductVersion", "2.2.3-servicing-35854")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -53,7 +55,7 @@ namespace JobYub.Migrations
 
                     b.Property<double>("Longitude");
 
-                    b.Property<int>("MajorId");
+                    b.Property<int?>("MajorID");
 
                     b.Property<int>("MaxSalary");
 
@@ -77,7 +79,7 @@ namespace JobYub.Migrations
 
                     b.Property<string>("Title");
 
-                    b.Property<int>("advertisementType");
+                    b.Property<int>("advertisementType1");
 
                     b.Property<int>("status");
 
@@ -89,7 +91,7 @@ namespace JobYub.Migrations
 
                     b.HasIndex("JobCategoryID");
 
-                    b.HasIndex("MajorId");
+                    b.HasIndex("MajorID");
 
                     b.HasIndex("PaymentID");
 
@@ -515,8 +517,7 @@ namespace JobYub.Migrations
 
                     b.HasOne("JobYub.Models.Major")
                         .WithMany("Advertisements")
-                        .HasForeignKey("MajorId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("MajorID");
 
                     b.HasOne("JobYub.Models.Payment", "Payment")
                         .WithMany()

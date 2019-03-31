@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JobYub.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190331091416_test6")]
-    partial class test6
+    [Migration("20190331094818_mjhg")]
+    partial class mjhg
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -55,7 +55,7 @@ namespace JobYub.Migrations
 
                     b.Property<double>("Longitude");
 
-                    b.Property<int?>("MajorID");
+                    b.Property<int>("MajorId");
 
                     b.Property<int>("MaxSalary");
 
@@ -91,7 +91,7 @@ namespace JobYub.Migrations
 
                     b.HasIndex("JobCategoryID");
 
-                    b.HasIndex("MajorID");
+                    b.HasIndex("MajorId");
 
                     b.HasIndex("PaymentID");
 
@@ -517,7 +517,8 @@ namespace JobYub.Migrations
 
                     b.HasOne("JobYub.Models.Major")
                         .WithMany("Advertisements")
-                        .HasForeignKey("MajorID");
+                        .HasForeignKey("MajorId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("JobYub.Models.Payment", "Payment")
                         .WithMany()
