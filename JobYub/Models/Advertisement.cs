@@ -76,8 +76,10 @@ namespace JobYub.Models
 		public virtual IEnumerable<AdvertisementMajor> AdvertisementMajors { get; set; }
 
 		public  AdvertisementType advertisementType {get;set;}
+        //public int MajorID { get; set; }
+        //public Major Major { get; set; }
 
-	}
+    }
     public enum CollaborationType {parttime, fulltime,  both }
     public enum Gender { male,female,unknown}
 
