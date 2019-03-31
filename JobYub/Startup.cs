@@ -51,8 +51,7 @@ namespace JobYub
             {
                 c.SwaggerDoc("v1", new Info { Title = "Jobino API", Version = "v1" });
             });
-            services.Configure<IdentityOptions>(option=> { option.SignIn.RequireConfirmedPhoneNumber = true;  });
-            services.Configure<IdentityUser>(option => { option.TwoFactorEnabled = true; });
+            
 
            // services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();

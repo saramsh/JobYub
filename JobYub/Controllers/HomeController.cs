@@ -19,11 +19,12 @@ namespace JobYub.Controllers
            
             return View();
         }
+        [Authorize]
         [HttpGet]
         public IActionResult Privacy()
         {
             AuthMessageSender s = new AuthMessageSender();
-             s.SendSmsAsync("9010596159", "test again");
+           //  s.SendSmsAsync("9010596159", "test again");
 
             return View();
         }
