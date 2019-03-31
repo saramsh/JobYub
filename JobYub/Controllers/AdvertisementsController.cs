@@ -166,22 +166,7 @@ namespace JobYub.Controllers
 		//		return NotFound();
 
 		//}
-		public class KeywordSearchModel
-		{
-			public string keyword { get; set; }
-			public int AdvertisementType { get; set; }
-		}
-
-		public class SearchModel
-		{
-			public int AdvertisementType { get; set; }
-			public int Experience { get; set; }
-			public int Salary { get; set; }
-			public int CollaborationTypeID { get; set; }
-			public int gender { get; set; }
-			public string EducationLevel { get; set; }
-
-		}
+		
 
 	}
 }

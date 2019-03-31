@@ -146,9 +146,10 @@ namespace JobYub.Areas.Identity.Pages.Account
                     await _context.SaveChangesAsync();
                     AuthMessageSender s = new AuthMessageSender();
                     await s.SendSmsAsync(user.PhoneNumber, user.VerificationCode);
-                    
-                    //var resul = await _signInManager.PasswordSignInAsync("a@a.com", "A@aaa1", false, lockoutOnFailure: true);
-                   
+
+					//var resul = await _signInManager.PasswordSignInAsync("a@a.com", "A@aaa1", false, lockoutOnFailure: true);
+					//new { PhoneNumber = user.PhoneNumber }
+					return new StatusCodeResult(200);
 
                
                     
@@ -167,11 +168,12 @@ namespace JobYub.Areas.Identity.Pages.Account
 
 
 				// If we got this far, something failed, redisplay form
-				return Page();
+				//return Page();
+				return new StatusCodeResult(400);
 			}
 
 
-			return Page();
+			return new StatusCodeResult(400);
 		}
         public async Task<IActionResult> OnPutAsync( string returnurl=null)
         {
