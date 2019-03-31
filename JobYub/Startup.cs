@@ -17,6 +17,9 @@ using JobYub.Models;
 using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using JobYub.Helpers;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace JobYub
 {
@@ -32,6 +35,7 @@ namespace JobYub
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -50,10 +54,35 @@ namespace JobYub
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "Jobino API", Version = "v1" });
-            });
-            
 
-           // services.AddTransient<IEmailSender, AuthMessageSender>();
+            });
+            IConfigurationBuilder builder = new ConfigurationBuilder()
+      .SetBasePath(System.IO.Directory.GetCurrentDirectory())
+      .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+          
+            IConfigurationRoot configuration = builder.Build();
+          
+           
+
+            var key = Encoding.ASCII.GetBytes(configuration.GetSection("AppSettings").GetSection("Secret").Value);
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
+            // services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
         }
 
@@ -72,7 +101,12 @@ namespace JobYub
                 app.UseHsts();
             }
 
+            app.UseCors(x => x
+              .AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader());
 
+           
 
 
             app.UseHttpsRedirection();
