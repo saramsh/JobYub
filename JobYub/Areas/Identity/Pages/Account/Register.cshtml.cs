@@ -69,7 +69,8 @@ namespace JobYub.Areas.Identity.Pages.Account
 			//[StringLength(11, ErrorMessage = "The must be at least {2} and at max {1} characters long.", MinimumLength = 11)]
 			//[Display(Name = "Mobile")]
 			//public string Mobile { get; set; }
-
+            [Required]
+         
             [Display(Name = "PhoneNumber")]
             public string PhoneNumber { get; set; }
 
@@ -200,13 +201,13 @@ namespace JobYub.Areas.Identity.Pages.Account
             {
 
 
-                if (user.VerificationCode ==Input.VerificationCode)
+                if (user.VerificationCode ==Input.VerificationCode&&Input.VerificationCode!="")
                 {
                     user.AccessFailedCount = 0;
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     string g = await _userManager.GetAuthenticationTokenAsync(user, "test", "token");
                    
-
+                    
                     ///////////////////////////////////
                     var tokenHandler = new JwtSecurityTokenHandler();
                     var key = Encoding.ASCII.GetBytes(_Secret);
@@ -221,7 +222,8 @@ namespace JobYub.Areas.Identity.Pages.Account
                     };
                     var token = tokenHandler.CreateToken(tokenDescriptor);
                     user.Token = tokenHandler.WriteToken(token);
-
+                    user.VerificationCode = "";
+                    await _context.SaveChangesAsync();
                     ////////////////////////////////////////////
                     OkObjectResult s = new OkObjectResult(user.Token);
                     return s;
@@ -230,6 +232,8 @@ namespace JobYub.Areas.Identity.Pages.Account
                 else
                 {
                     user.AccessFailedCount++;
+                    user.VerificationCode = "";
+                    await  _context.SaveChangesAsync();
                     return BadRequest("The Verification Code is not true;");
                 }
             }
