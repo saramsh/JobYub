@@ -33,6 +33,7 @@ namespace JobYub.Controllers
         public async Task<ActionResult> GetAdvertisement()
         {
             var res=await _context.Advertisement.Where(a=>a.status==Status.confirmed).ToListAsync();
+			
             if (res != null)
                 return Ok(res);
             else
