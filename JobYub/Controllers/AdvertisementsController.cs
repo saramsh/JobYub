@@ -32,7 +32,7 @@ namespace JobYub.Controllers
         [HttpGet]
         public async Task<ActionResult> GetAdvertisement()
         {
-            var res=await _context.Advertisement.Where(a=>a.Confirmed==true).ToListAsync();
+            var res=await _context.Advertisement.Where(a=>a.status==Status.confirmed).ToListAsync();
             if (res != null)
                 return Ok(res);
             else
@@ -203,6 +203,45 @@ namespace JobYub.Controllers
 
 
 
+		[Route("/Advertisements/Confirm")]
+		public async Task<ActionResult> ConfirmAdvertisements(AdvertisementIDsModel advertisementIDs)
+		{
+			try
+			{
+				foreach (int id in advertisementIDs.AdvertisementIDs)
+				{
+					var advertisement = await _context.Advertisement.FindAsync(id);
+					advertisement.status = Status.confirmed;
+				}
+				await _context.SaveChangesAsync();
+				return Ok();
+			}
+			catch(Exception ex)
+			{
+				return StatusCode(500);
+			}
+
+		}
+
+		[Route("/Advertisements/Deactivate")]
+		public async Task<ActionResult> DeactivateAdvertisements(AdvertisementIDsModel advertisementIDs)
+		{
+			try
+			{
+				foreach (int id in advertisementIDs.AdvertisementIDs)
+				{
+					var advertisement = await _context.Advertisement.FindAsync(id);
+					advertisement.status = Status.deactive;
+				}
+				await _context.SaveChangesAsync();
+				return Ok();
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500);
+			}
+
+		}
 
     }
 }

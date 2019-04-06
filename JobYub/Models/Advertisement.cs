@@ -66,7 +66,7 @@ class test    {
 
 		public virtual Tarrif Tarrif { get; set; }
 
-		public bool Confirmed { get; set; }
+		//public bool Confirmed { get; set; }
 
 		public int? PaymentID { get; set; }
 
@@ -123,6 +123,11 @@ class test    {
 		public AdvertisementType AdvertisementType { get; set; }
 	}
 
+
+	public class AdvertisementIDsModel
+	{
+		public int[] AdvertisementIDs { get; set; }
+	}
 	public class SearchModel
 	{
 		public int AdvertisementType { get; set; }

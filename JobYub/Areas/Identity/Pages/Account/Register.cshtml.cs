@@ -69,13 +69,33 @@ namespace JobYub.Areas.Identity.Pages.Account
 			//[StringLength(11, ErrorMessage = "The must be at least {2} and at max {1} characters long.", MinimumLength = 11)]
 			//[Display(Name = "Mobile")]
 			//public string Mobile { get; set; }
-            [Required]
-         
+            [Required]      
             [Display(Name = "PhoneNumber")]
             public string PhoneNumber { get; set; }
 
-            //[Required]
-            [EmailAddress]
+			[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
+			[Display(Name = "FirstName")]
+			public string FirstName { get; set; }
+
+			[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
+			[Display(Name = "LastName")]
+			public string LastName { get; set; }
+
+			[Url]
+			[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+			[Display(Name = "Website")]
+			public string Website { get; set; }
+
+			[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
+			[Display(Name = "BirthDate")]
+			public string BirthDate { get; set; }
+
+			[StringLength(11, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 8)]
+			[Display(Name = "HomePhone")]
+			public string HomePhone { get; set; }
+
+			//[Required]
+			[EmailAddress]
 			[Display(Name = "Email")]
 			public string Email { get; set; }
 
@@ -96,25 +116,57 @@ namespace JobYub.Areas.Identity.Pages.Account
 			[Display(Name = "City")]
 			public int CityID { get; set; }
 
+			[Display(Name = "Major")]
+			public int MajorID { get; set; }
+
+			[Display(Name = "MilitaryStatus")]
+			public int MilitaryStatus { get; set; }
+
+			[Display(Name = "Region")]
+			public int RegionID { get; set; }
+
+			[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+			[Display(Name = "Address")]
+			public string Address { get; set; }
+			
+			//size: 100k
+			[StringLength(100000, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+			[Display(Name = "Photo")]
+			public string Photo { get; set; }
+
+			//size: 100k
+			[StringLength(100000, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+			[Display(Name = "Resume")]
+			public string Resume { get; set; }
+
 			//register required fields for employer 
 			[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
-			[Display(Name = "CompanyName")]
-			public string CompanyName { get; set; }
+			[Display(Name = "Company")]
+			public string Company { get; set; }
 
 			[Display(Name = "CompanyType")]
 			public int CompanyTypeID { get; set; }
+
+			[Display(Name = "Latitude")]
+			public double Latitude { get; set; }
+
+			[Display(Name = "longitude")]
+			public double longtitude { get; set; }
 
 			//register required fields for employee 
 			[Display(Name = "Graduated")]
 			public bool Graduated { get; set; }
 
 			[Display(Name = "EdcationLevel")]
-			public string EdcationLevel { get; set; }
+			public int EdcationLevel { get; set; }
 
-			[Display(Name = "Major")]
-			public int MajorID { get; set; }
+			[Display(Name = "Experience")]
+			public int Experience { get; set; }
 
+			[Display(Name = "UserID")]
+			public int UserID { get; set; }
 
+			//public Advertisement[] ad
 		}
 
 		public void OnGet(string returnUrl = null)
@@ -242,15 +294,15 @@ namespace JobYub.Areas.Identity.Pages.Account
                 return NotFound("Phone has not found;");
             }
         }
-     
-        
-        
-        
-      
+
+		
 
 
 
 
 
-    }
+
+
+
+	}
 }
