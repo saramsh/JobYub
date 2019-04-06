@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -41,8 +42,8 @@ class test    {
 		public int MinSalary { get; set; }
 
 		public int MaxSalary { get; set; }
-
-		public List<EducationLevel> EducationLevel { get; set; }
+       
+        public virtual IEnumerable<EducationLevel> EducationLevel {set;get;}
 
 		public Int16 Age { get; set; }
         public int? MaxAge { get; set; }
@@ -98,7 +99,7 @@ class test    {
 
 	public enum Status { waiting, confirmed, deactive}
 	public enum AdvertisementType { employerAdds, employeeAdds }
-    public enum EducationLevel { Bisavad, Sikl, FogheDiplom, Diplom, Lisans, FogheLisans, PhD, MedicalDoctor, SpecialistDoctor, Fellowship }
+    
     public class AdvertisementSearchModel
     {
         public string KeyWord { get; set; }
