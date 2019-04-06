@@ -25,7 +25,7 @@ namespace JobYub.Controllers
         {
             AuthMessageSender s = new AuthMessageSender();
            //  s.SendSmsAsync("9010596159", "test again");
-
+            
             return View();
         }
         [HttpGet]
