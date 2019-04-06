@@ -31,20 +31,24 @@ class test    {
 		public string TagIDs { get; set; }
 
 		public int Experience { get; set; }
+        public string PhoneNumber { get; set; }
+        public string SalaryType { get; set; }
 
-	//	public int MajorId { get; set; }
+                                           //	public int MajorId { get; set; }
 
-		public CollaborationType CollaborationType { get; set; }
+        public CollaborationType CollaborationType { get; set; }
 
 		public int MinSalary { get; set; }
 
 		public int MaxSalary { get; set; }
 
-		public string EducationLevel { get; set; }
+		public List<EducationLevel> EducationLevel { get; set; }
 
 		public Int16 Age { get; set; }
+        public int? MaxAge { get; set; }
+        public int? MinAge { get; set; }
 
-		public Gender Gender { get; set; }
+        public Gender Gender { get; set; }
 
 		public double Longitude { get; set; }
 
@@ -78,7 +82,7 @@ class test    {
 
 		public int ReportNum { get; set; }
 
-		public bool Graduated { get; set; }
+		public bool? Graduated { get; set; }
 		public string ApplicationUserID { get; set; }
 		public virtual ApplicationUser ApplicationUser { get; set; }
 
@@ -94,8 +98,8 @@ class test    {
 
 	public enum Status { waiting, confirmed, deactive}
 	public enum AdvertisementType { employerAdds, employeeAdds }
-    
-	public class AdvertisementSearchModel
+    public enum EducationLevel { Bisavad, Sikl, FogheDiplom, Diplom, Lisans, FogheLisans, PhD, MedicalDoctor, SpecialistDoctor, Fellowship }
+    public class AdvertisementSearchModel
     {
         public string KeyWord { get; set; }
 
@@ -111,8 +115,8 @@ class test    {
         public Gender? Gender { get; set; }
         public List<int> CompanyTypeIDs { get; set; }
         public List<int> MajorIDs { get; set; }
-        public bool Graduated { get; set; }
-        public string EducationLevel { get; set; }
+        public bool? Graduated { get; set; }
+        public  List<EducationLevel> EducationLevel { get; set; }
         
 
     }

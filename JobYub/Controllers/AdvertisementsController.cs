@@ -147,6 +147,22 @@ namespace JobYub.Controllers
             }
             
             if(model.Graduated!=null)
+                query = query.Where(a => a.Graduated == model.Graduated);
+
+            if (model.EducationLevel != null)
+            {
+
+                model.EducationLevel.ForEach(eID => query = query.Where(a => a.EducationLevel.Contains(eID)));
+            }
+
+            if (model.MajorIDs != null)
+            {
+
+
+
+                model.MajorIDs.ForEach(mID => query = query.Where(a => a.AdvertisementMajors.Where(am=>am.MajorID==mID ));
+            }
+
 
             if (model.Experience != null)
                 query = query.Where(a => a.Experience <= model.Experience);
