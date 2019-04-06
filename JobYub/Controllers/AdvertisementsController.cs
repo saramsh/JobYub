@@ -155,13 +155,13 @@ namespace JobYub.Controllers
                 model.EducationLevel.ForEach(eID => query = query.Where(a => a.EducationLevel.Contains(eID)));
             }
 
-            if (model.MajorIDs != null)
-            {
+            //if (model.MajorIDs != null)
+            //{
 
 
 
-                model.MajorIDs.ForEach(mID => query = query.Where(a => a.AdvertisementMajors.Where(am=>am.MajorID==mID ));
-            }
+            //    model.MajorIDs.ForEach(mID => query = query.Where(a => a.AdvertisementMajors.Where(am=>am.MajorID==mID ));
+            //}
 
 
             if (model.Experience != null)
