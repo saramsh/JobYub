@@ -6,7 +6,16 @@ using System.Threading.Tasks;
 
 namespace JobYub.Models
 {
-	public class Advertisement
+
+class test    {
+
+
+
+
+}
+
+
+    public class Advertisement
 	{
 		public int ID { get; set; }
 
@@ -22,20 +31,24 @@ namespace JobYub.Models
 		public string TagIDs { get; set; }
 
 		public int Experience { get; set; }
+        public string PhoneNumber { get; set; }
+        public string SalaryType { get; set; }
 
-	//	public int MajorId { get; set; }
+                                           //	public int MajorId { get; set; }
 
-		public CollaborationType CollaborationType { get; set; }
+        public CollaborationType CollaborationType { get; set; }
 
 		public int MinSalary { get; set; }
 
 		public int MaxSalary { get; set; }
 
-		public string EducationLevel { get; set; }
+		public List<EducationLevel> EducationLevel { get; set; }
 
 		public Int16 Age { get; set; }
+        public int? MaxAge { get; set; }
+        public int? MinAge { get; set; }
 
-		public Gender Gender { get; set; }
+        public Gender Gender { get; set; }
 
 		public double Longitude { get; set; }
 
@@ -69,7 +82,7 @@ namespace JobYub.Models
 
 		public int ReportNum { get; set; }
 
-		public string Graduated { get; set; }
+		public bool? Graduated { get; set; }
 		public string ApplicationUserID { get; set; }
 		public virtual ApplicationUser ApplicationUser { get; set; }
 
@@ -85,13 +98,27 @@ namespace JobYub.Models
 
 	public enum Status { waiting, confirmed, deactive}
 	public enum AdvertisementType { employerAdds, employeeAdds }
-
-	public class AdvertisementSearchModel
+    public enum EducationLevel { Bisavad, Sikl, FogheDiplom, Diplom, Lisans, FogheLisans, PhD, MedicalDoctor, SpecialistDoctor, Fellowship }
+    public class AdvertisementSearchModel
     {
+        public string KeyWord { get; set; }
+
         public string Title { get; set; }
+
         public string City { get; set; }
-        public string JobCategory { get; set; }
-        public string Role { get; set; }
+        public int? JobCategoryID { get; set; }
+        public AdvertisementType? AdvertisementType { get; set; }
+        public int? Experience { get; set; }
+        public CollaborationType? CollaborationType { get; set; }
+        public int? Salary { get; set; }
+       
+        public Gender? Gender { get; set; }
+        public List<int> CompanyTypeIDs { get; set; }
+        public List<int> MajorIDs { get; set; }
+        public bool? Graduated { get; set; }
+        public  List<EducationLevel> EducationLevel { get; set; }
+        
+
     }
 
 	public class KeywordSearchModel

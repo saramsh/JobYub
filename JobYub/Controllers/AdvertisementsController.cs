@@ -17,39 +17,17 @@ namespace JobYub.Controllers
     {
         private readonly ApplicationDbContext _context;
 
+
+                      
         public AdvertisementsController(ApplicationDbContext context)
         {
             _context = context;
         }
-        [HttpPost]
-        [Route("SearchAsync")]
-        public async Task<ActionResult<List<Advertisement>>> SearchAsync(AdvertisementSearchModel model)
-        {
-            IQueryable<Advertisement> res = _context.Advertisement;
-            
-            if (model.Title != null)
-                res = res.Where(a => a.Title.Contains(model.Title) == true);
 
-            if (model.City != null)
-                res = res.Where(a => a.City.Name.Contains(model.City)==true);
-            if (model.JobCategory != null)
-                res = res.Where(a => a.JobCategory.Name.Contains(model.JobCategory)==true);
-            if (model.Role != null)
-            {
-                
-                res = res;
-            }
-            if (res != null)
-            {
-                return await res.ToListAsync();
-            }
-            else
-            {
-                return NotFound("جستجو نتیجه ای در بر نداشت.");
-            }
-            
-            
-        }
+
+
+
+      
         // GET: api/Advertisements
         [HttpGet]
         public async Task<ActionResult> GetAdvertisement()
@@ -143,32 +121,104 @@ namespace JobYub.Controllers
         {
             return _context.Advertisement.Any(e => e.ID == id);
         }
+        [HttpPost]
+        [Route("/Advertisements/search")]
+        public async Task<IActionResult> SearchAsync(AdvertisementSearchModel model)
+        {
 
-		[Route("/Advertisements/SearchByKeyword")]
-		public async Task<ActionResult> SearchAdvertisementByKeyword(KeywordSearchModel keywordSearchModel )
-		{
+            //IQueryable<Advertisement> res = _context.Advertisement;
 
-			var res =  _context.Advertisement.Where(adds =>adds.advertisementType==keywordSearchModel.AdvertisementType && adds.status==Status.confirmed && (  adds.Title.ToLower().Contains(keywordSearchModel.keyword.ToLower()) || adds.Description.ToLower().Contains(keywordSearchModel.keyword.ToLower()))).FirstOrDefault();
-			//addtype
-			if (res != null)
-				return Ok(res);
-			else
-				return NotFound();
+            var query = _context.Advertisement.AsQueryable();
 
-		}
+            if (model.AdvertisementType != null)
+                query = query.Where(a => a.advertisementType == model.AdvertisementType);
 
-		[Route("/Advertisements/Search")]
-		public async Task<ActionResult> SearchAdvertisement(KeywordSearchModel keywordSearchModel)
-		{
+            if (model.CollaborationType != null)
+                query = query.Where(a => a.CollaborationType == model.CollaborationType);
 
-			var res = _context.Advertisement.Where(adds => adds.advertisementType == keywordSearchModel.AdvertisementType && (adds.Title.ToLower().Contains(keywordSearchModel.keyword.ToLower()) || adds.Description.ToLower().Contains(keywordSearchModel.keyword.ToLower()))).FirstOrDefault();
-			//addtype
-			if (res != null)
-				return Ok(res);
-			else
-				return NotFound();
+            if (model.Salary != null)
+                query = query.Where(a => a.MinSalary >= model.Salary && a.MaxSalary<=model.Salary);
 
-		}
+            if (model.Gender != null)
+                query = query.Where(a => a.Gender == model.Gender);
+
+            if (model.CompanyTypeIDs != null)
+            {
+                model.CompanyTypeIDs.ForEach(cID => query = query.Where(a => a.ApplicationUser.CompanyTypeID == cID));
+            }
+            
+            if(model.Graduated!=null)
+                query = query.Where(a => a.Graduated == model.Graduated);
+
+            if (model.EducationLevel != null)
+            {
+
+                model.EducationLevel.ForEach(eID => query = query.Where(a => a.EducationLevel.Contains(eID)));
+            }
+
+            if (model.MajorIDs != null)
+            {
+
+
+
+                model.MajorIDs.ForEach(mID => query = query.Where(a => a.AdvertisementMajors.Where(am=>am.MajorID==mID ));
+            }
+
+
+            if (model.Experience != null)
+                query = query.Where(a => a.Experience <= model.Experience);
+            
+            if (model.KeyWord != null)
+                query = query.Where(a => a.Title.Contains(model.KeyWord) || a.Description.Contains(model.KeyWord));
+
+            if (model.Title != null)
+                query = query.Where(a => a.Title.Contains(model.Title) == true);
+
+            if (model.City != null)
+                query = query.Where(a => a.City.Name.Contains(model.City) == true);
+
+            if (model.JobCategoryID != null)
+                query = query.Where(a => a.JobCategory.ID == model.JobCategoryID);
+
+
+
+
+
+            return Ok(await query.ToListAsync());
+
+
+
+        }
+        //[Route("/Advertisements/SearchByKeyword")]
+        //public async Task<ActionResult> SearchAdvertisementByKeyword(KeywordSearchModel keywordSearchModel)
+        //{
+
+        //	var res =  _context.Advertisement.Where(adds =>adds.advertisementType==keywordSearchModel.AdvertisementType && adds.status==Status.confirmed && (  adds.Title.ToLower().Contains(keywordSearchModel.keyword.ToLower()) || adds.Description.ToLower().Contains(keywordSearchModel.keyword.ToLower()))).FirstOrDefault();
+
+        //          //addtype
+        //	if (res != null)
+        //		return Ok(res);
+        //	else
+        //		return NotFound();
+
+        //}
+
+        //[Route("/Advertisements/Search")]
+        //public async Task<ActionResult> SearchAdvertisement(KeywordSearchModel keywordSearchModel)
+        //{
+
+        //	var res = _context.Advertisement.Where(adds => adds.advertisementType == keywordSearchModel.AdvertisementType && (adds.Title.ToLower().Contains(keywordSearchModel.keyword.ToLower()) || adds.Description.ToLower().Contains(keywordSearchModel.keyword.ToLower()))).FirstOrDefault();
+        //	//addtype
+        //	if (res != null)
+        //		return Ok(res);
+        //	else
+        //		return NotFound();
+
+        //}
+
+
+
+
 
 		[Route("/Advertisements/Confirm")]
 		public async Task<ActionResult> ConfirmAdvertisements(AdvertisementIDsModel advertisementIDs)
@@ -210,5 +260,5 @@ namespace JobYub.Controllers
 
 		}
 
-	}
+    }
 }
