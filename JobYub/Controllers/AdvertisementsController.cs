@@ -32,7 +32,7 @@ namespace JobYub.Controllers
         [HttpGet]
         public async Task<ActionResult> GetAdvertisement()
         {
-            var res=await _context.Advertisement.Where(a=>a.status==Status.confirmed).ToListAsync();
+            var res=await _context.Advertisement.Where(a=>a.status==Status.confirmed).Include(c=>c.City).ToListAsync();
 			
             if (res != null)
                 return Ok(res);
@@ -161,7 +161,7 @@ namespace JobYub.Controllers
 
 
 
-                model.MajorIDs.ForEach(mID => query = query.Where(a => a.AdvertisementMajors.Where(am=>am.MajorID==mID ));
+               // model.MajorIDs.ForEach(mID => query = query.Where(a => a.AdvertisementMajors.Where(am=>am.MajorID==mID ));
             }
 
 

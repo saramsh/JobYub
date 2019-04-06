@@ -38,8 +38,8 @@ namespace JobYub.Models
 
 
     }
-
-	public enum EducationLevel { Sikl,FogheDiplom, Diplom, Lisans, FogheLisans,PhD, MedicalDoctor, SpecialistDoctor, Fellowship   }
+	
+	//public enum EducationLevel { Sikl,FogheDiplom, Diplom, Lisans, FogheLisans,PhD, MedicalDoctor, SpecialistDoctor, Fellowship   }
 
 	public enum MilitaryStatus { PayanKhedmat, Moaf }
 
