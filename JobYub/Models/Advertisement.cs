@@ -8,12 +8,6 @@ using System.Threading.Tasks;
 namespace JobYub.Models
 {
 
-class test    {
-
-
-
-
-}
 
 
     public class Advertisement
