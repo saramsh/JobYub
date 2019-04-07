@@ -172,7 +172,6 @@ namespace JobYub.Controllers
 
             if (model.EducationLevel != null)
             {
-
                 model.EducationLevel.ForEach(eID => query = query.Where(a => a.EducationLevel.Contains(eID)));
             }
 
