@@ -49,26 +49,25 @@ namespace JobYub.Models
 
 		public double Latitude { get; set; }
 
-		public  int JobCategoryID { get; set; }
+		public virtual int JobCategoryID { get; set; }
 
 		public virtual JobCategory JobCategory { get; set; }
 
-		//[ForeignKey("City")]
-		public  int CityID { get; set; }
+		public virtual int CityID { get; set; }
 
 		public virtual City City { get; set; }
 
-		public int RegionID { get; set; }
+		public virtual int RegionID { get; set; }
 
 		public virtual Region Region { get; set; }
 
-		public int TarrifID { get; set; }
+		public virtual int TarrifID { get; set; }
 
 		public virtual Tarrif Tarrif { get; set; }
 
 		//public bool Confirmed { get; set; }
 
-		public int? PaymentID { get; set; }
+		public virtual int? PaymentID { get; set; }
 
 		public virtual Payment Payment { get; set; }
 
@@ -79,7 +78,7 @@ namespace JobYub.Models
 		public int ReportNum { get; set; }
 
 		public bool? Graduated { get; set; }
-		public string ApplicationUserID { get; set; }
+		public virtual string ApplicationUserID { get; set; }
 		public virtual ApplicationUser ApplicationUser { get; set; }
 
 		public virtual IEnumerable<AdvertisementMajor> AdvertisementMajors { get; set; }

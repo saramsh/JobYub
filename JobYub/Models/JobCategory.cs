@@ -10,7 +10,7 @@ namespace JobYub.Models
 		public int ID { get; set; }
 		public string Name { get; set; }
 		public string Description { get; set; }
-		public int ParentID { get; set; }
+		public virtual int ParentID { get; set; }
 		public virtual JobCategory ParentCategory { get; set; }
         public virtual ICollection<Advertisement> Advertisements { get; set; }
     }
