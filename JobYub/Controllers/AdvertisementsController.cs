@@ -32,7 +32,7 @@ namespace JobYub.Controllers
         [HttpGet]
         public async Task<ActionResult> GetAdvertisement()
         {
-            var res=await _context.Advertisement.Where(a=>a.status==Status.confirmed).Include(s=>s.City).ToListAsync();
+            var res =  _context.Advertisement.Where(a => a.status == Status.confirmed).Include(s => s.City).Include(s => s.Tarrif).Include(s => s.Region);
 			
             if (res != null)
                 return Ok(res);
@@ -47,7 +47,7 @@ namespace JobYub.Controllers
         {
             var advertisement = await _context.Advertisement.FindAsync(id);
 
-            if (advertisement == null)
+            if (advertisement == null&&advertisement.status!=Status.confirmed)
             {
                 return NotFound();
             }
@@ -129,7 +129,7 @@ namespace JobYub.Controllers
             //IQueryable<Advertisement> res = _context.Advertisement;
 
             var query = _context.Advertisement.AsQueryable();
-
+            query = query.Where(a => a.status == Status.confirmed);
             if (model.AdvertisementType != null)
                 query = query.Where(a => a.advertisementType == model.AdvertisementType);
 
