@@ -32,8 +32,9 @@ namespace JobYub.Controllers
         [HttpGet]
         public async Task<ActionResult> GetAdvertisement()
         {
-            var res =  _context.Advertisement.Where(a => a.status == Status.confirmed).Include(s => s.City).Include(s => s.Tarrif).Include(s => s.Region);
-			
+            var res = await _context.Advertisement.Where(a => a.status == Status.confirmed).Include(s => s.City).Include(s => s.Region).Include(s => s.Payment).Include(s => s.Tarrif).ToListAsync();
+
+
             if (res != null)
                 return Ok(res);
             else

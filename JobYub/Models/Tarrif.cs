@@ -13,7 +13,7 @@ namespace JobYub.Models
 		public int Days { get; set; }
 		public string Price { get; set; }
 		public int PriorityID { get; set; }
-        public virtual ICollection<Advertisement> Advertisements { get; set; }
+        //public  ICollection<Advertisement> Advertisements { get; set; }
 
     }
 }
