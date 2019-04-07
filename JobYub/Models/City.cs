@@ -13,7 +13,7 @@ namespace JobYub.Models
 		public int ProvinceID { get; set; }
 		public virtual Province Province { get; set; }
         public virtual ICollection<ApplicationUser> Users { get; set; }
-        public  ICollection<Advertisement> Advertisements { get; set; }
+        public virtual ICollection<Advertisement> Advertisements { get; set; }
         public virtual ICollection<Region> Regions { get; set; }
 
 

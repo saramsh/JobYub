@@ -50,7 +50,7 @@ namespace JobYub.Controllers
 			[EmailAddress]
 			public string Email { get; set; }
 
-			[MaxLength(4)]
+			[MaxLength(6)]
 			public string VerificationCode { get; set; }
 
 			[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
@@ -62,13 +62,13 @@ namespace JobYub.Controllers
 			public string ConfirmPassword { get; set; }
 
 			//register required fields for employee and employer
-			public int CityID { get; set; }
+			public int? CityID { get; set; }
 
-			public int MajorID { get; set; }
+			public int? MajorID { get; set; }
 			
-			public int MilitaryStatus { get; set; }
+			public int? MilitaryStatus { get; set; }
 			
-			public int RegionID { get; set; }
+			public int? RegionID { get; set; }
 
 			[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
 			public string Address { get; set; }
@@ -84,21 +84,21 @@ namespace JobYub.Controllers
 			//register required fields for employer 
 			[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
 			public string Company { get; set; }
-			public int CompanyTypeID { get; set; }
+			public int? CompanyTypeID { get; set; }
 
-			public double Latitude { get; set; }
+			public double? Latitude { get; set; }
 			
-			public double longtitude { get; set; }
+			public double? longtitude { get; set; }
 
 			//register required fields for employee 
 
 			public bool Graduated { get; set; }
 
-			public int EdcationLevel { get; set; }
+			public int? EdcationLevel { get; set; }
 
-			public int Experience { get; set; }
+			public int? Experience { get; set; }
 
-			public int UserID { get; set; }
+			public string ID { get; set; }
 
 			//public Advertisement[] ad
 		}
@@ -114,7 +114,7 @@ namespace JobYub.Controllers
 			}
 			try
 			{
-				var ApUser = await _context.ApplicationUser.FindAsync( Input.UserID);
+				var ApUser = await _context.ApplicationUser.FindAsync( Input.ID);
 				ApUser.FirstName = Input.FirstName;
 				ApUser.LastName = Input.LastName;
 				ApUser.Website = Input.Website;
@@ -123,16 +123,20 @@ namespace JobYub.Controllers
 				ApUser.MajorID = Input.MajorID;
 				ApUser.Email = Input.Email;
 				ApUser.CityID = Input.CityID;
-				ApUser.MilitaryStatus = (MilitaryStatus)Enum.Parse(typeof(MilitaryStatus), Input.MilitaryStatus.ToString());
+				if(Input.MilitaryStatus!=null)
+					ApUser.MilitaryStatus = (MilitaryStatus)Enum.Parse(typeof(MilitaryStatus), Input.MilitaryStatus.ToString());
 				ApUser.Address = Input.Address;
-				ApUser.Photo = System.Convert.FromBase64String(Input.Photo);
-				ApUser.Resume = System.Convert.FromBase64String(Input.Resume);
+				if (Input.Photo != null)
+					ApUser.Photo = System.Convert.FromBase64String(Input.Photo);
+				if (Input.Resume != null)
+					ApUser.Resume = System.Convert.FromBase64String(Input.Resume);
 				ApUser.Company = Input.Company;
 				ApUser.CompanyTypeID = Input.CompanyTypeID;
 				ApUser.Longtitude = Input.longtitude;
 				ApUser.Latitude = Input.Latitude;
 				ApUser.Graduated = Input.Graduated;
-				ApUser.EducationLevel = (EducationLevel)Enum.Parse(typeof(EducationLevel), Input.EdcationLevel.ToString()); ;
+				if (Input.EdcationLevel != null)
+					ApUser.EducationLevel = (EducationLevel)Enum.Parse(typeof(EducationLevel), Input.EdcationLevel.ToString()); ;
 				ApUser.Experience = Input.Experience;
 				await _context.SaveChangesAsync();
 				return new StatusCodeResult(200);
