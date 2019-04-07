@@ -7,6 +7,7 @@ using JobYub.Data;
 using JobYub.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace JobYub.Controllers
 {
@@ -153,8 +154,8 @@ namespace JobYub.Controllers
 		{
 			try
 			{
-				var applicationUser = await _context.ApplicationUser.FindAsync(user.Id);
-
+				var applicationUser = await _context.ApplicationUser.Where(u => u.Id == user.Id).Include(s => s.City).Include(s => s.EducationLevel).Include(s => s.Region).Include(s => s.Major).Include(s => s.CompanyType).FirstOrDefaultAsync();
+				
 				if (applicationUser == null)
 				{
 					return NotFound();
