@@ -56,7 +56,17 @@ namespace JobYub.Controllers
             return advertisement;
         }
 
-		
+
+		// POST: api/Advertisements
+		[HttpPost]
+		public async Task<ActionResult<Advertisement>> PostAdvertisement(Advertisement advertisement)
+		{
+			_context.Advertisement.Add(advertisement);
+			await _context.SaveChangesAsync();
+
+			return CreatedAtAction("GetAdvertisement", new { id = advertisement.ID }, advertisement);
+		}
+
 		// PUT: api/Advertisements/5
 
 		[HttpPut("{id}")]
@@ -160,7 +170,6 @@ namespace JobYub.Controllers
 
             if (model.EducationLevel != null)
             {
-
                 model.EducationLevel.ForEach(eID => query = query.Where(a => a.EducationLevel.Contains(eID)));
             }
 
