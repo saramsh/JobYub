@@ -14,7 +14,8 @@ namespace JobYub.Models
         public string BirthDate { get; set; }
         public string HomePhone { get; set; }
         public string Mobile { get; set; }
-        public EducationLevel EducationLevel { get; set; }
+        public virtual int EducationLevelID { get; set; }
+        public virtual EducationLevel EducationLevel { get; set; }
         public virtual int? MajorID { get; set; }
 		public virtual Major Major { get; set; }
 		public MilitaryStatus? MilitaryStatus { get; set; }
@@ -30,6 +31,7 @@ namespace JobYub.Models
         public virtual CompanyType CompanyType { get; set; }
         public double? Latitude { get; set; }
         public double? Longtitude { get; set; }
+        public Gender Gender { get; set; }
         public bool Graduated { get; set; }
         public int? Experience { get; set; }
         public virtual ICollection<Advertisement> Advertisements { get; set; }
@@ -40,7 +42,7 @@ namespace JobYub.Models
     }
 
 	
-
+    
 	public enum MilitaryStatus { PayanKhedmat, Moaf }
 
 }

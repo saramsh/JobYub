@@ -137,9 +137,9 @@ namespace JobYub.Controllers
 				ApUser.Graduated = Input.Graduated;
 				if (Input.EdcationLevel != null)
 					ApUser.EducationLevel = (EducationLevel)Enum.Parse(typeof(EducationLevel), Input.EdcationLevel.ToString()); ;
-				ApUser.Experience = Input.Experience;
+				ApUser.Experience = Input.Experience==null?ApUser.Experience:Input.Experience;
 				await _context.SaveChangesAsync();
-				return new StatusCodeResult(200);
+				return  Ok(ApUser);
 			}
 			catch (Exception ex)
 			{
