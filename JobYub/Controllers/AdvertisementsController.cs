@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using JobYub.Data;
 using JobYub.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Linq.Expressions;
 
 namespace JobYub.Controllers
 {
@@ -32,7 +33,7 @@ namespace JobYub.Controllers
         [HttpGet]
         public async Task<ActionResult> GetAdvertisement()
         {
-            var res=await _context.Advertisement.Where(a=>a.status==Status.confirmed).Include("City").Include("JobCategory").ToListAsync();
+            var res = await _context.Advertisement.Where(a => a.status == Status.confirmed).Include(s => s.City).Include(s => s.Tarrif).Include(s => s.Region).ToListAsync();
 			
             if (res != null)
                 return Ok(res);
@@ -45,7 +46,7 @@ namespace JobYub.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Advertisement>> GetAdvertisement(int id)
         {
-            var advertisement = await _context.Advertisement.FindAsync(id);
+            var advertisement = await _context.Advertisement.Include(a=>a.City).Include(a=>a.ApplicationUser).Include(a=>a.JobCategory).Include(a=>a.Payment).Include(a=>a.Region).Include(a=>a.Tarrif).FirstOrDefaultAsync(a=>a.ID==id);
 
             if (advertisement == null)
             {
@@ -55,20 +56,7 @@ namespace JobYub.Controllers
             return advertisement;
         }
 
-		// GET: api/Advertisements/5
-		[HttpGet("{id}")]
-		public async Task<ActionResult<Advertisement>> GetUserAdvertisement(int id)
-		{
-			var advertisement = await _context.Advertisement.FindAsync(id);
-
-			if (advertisement == null)
-			{
-				return NotFound();
-			}
-
-			return advertisement;
-		}
-
+		
 		// PUT: api/Advertisements/5
 
 		[HttpPut("{id}")]
@@ -107,7 +95,7 @@ namespace JobYub.Controllers
         {
 			try
 			{
-				var applicationUser =  _context.ApplicationUser.Where(u => u.Id == user.Id).Include(u => u.Advertisements).FirstOrDefault();
+				var applicationUser = await _context.ApplicationUser.Where(u => u.Id == user.Id).Include(u => u.Advertisements).FirstOrDefaultAsync();
 				if (applicationUser != null)
 				{
 					return Ok(applicationUser.Advertisements);
@@ -145,11 +133,11 @@ namespace JobYub.Controllers
         [Route("/Advertisements/search")]
         public async Task<IActionResult> SearchAsync(AdvertisementSearchModel model)
         {
-
+               
             //IQueryable<Advertisement> res = _context.Advertisement;
 
             var query = _context.Advertisement.AsQueryable();
-
+                     
             if (model.AdvertisementType != null)
                 query = query.Where(a => a.advertisementType == model.AdvertisementType);
 
@@ -175,14 +163,10 @@ namespace JobYub.Controllers
                 model.EducationLevel.ForEach(eID => query = query.Where(a => a.EducationLevel.Contains(eID)));
             }
 
-            //if (model.MajorIDs != null)
-            //{
+            
 
-                
-            //    model.MajorIDs.ForEach(mID => query = query.Where(a => a.AdvertisementMajors.Where(am => am.MajorID == mID));
-            //}
-
-
+   
+            
             if (model.Experience != null)
                 query = query.Where(a => a.Experience <= model.Experience);
             
@@ -207,33 +191,7 @@ namespace JobYub.Controllers
 
 
         }
-        //[Route("/Advertisements/SearchByKeyword")]
-        //public async Task<ActionResult> SearchAdvertisementByKeyword(KeywordSearchModel keywordSearchModel)
-        //{
-
-        //	var res =  _context.Advertisement.Where(adds =>adds.advertisementType==keywordSearchModel.AdvertisementType && adds.status==Status.confirmed && (  adds.Title.ToLower().Contains(keywordSearchModel.keyword.ToLower()) || adds.Description.ToLower().Contains(keywordSearchModel.keyword.ToLower()))).FirstOrDefault();
-
-        //          //addtype
-        //	if (res != null)
-        //		return Ok(res);
-        //	else
-        //		return NotFound();
-
-        //}
-
-        //[Route("/Advertisements/Search")]
-        //public async Task<ActionResult> SearchAdvertisement(KeywordSearchModel keywordSearchModel)
-        //{
-
-        //	var res = _context.Advertisement.Where(adds => adds.advertisementType == keywordSearchModel.AdvertisementType && (adds.Title.ToLower().Contains(keywordSearchModel.keyword.ToLower()) || adds.Description.ToLower().Contains(keywordSearchModel.keyword.ToLower()))).FirstOrDefault();
-        //	//addtype
-        //	if (res != null)
-        //		return Ok(res);
-        //	else
-        //		return NotFound();
-
-        //}
-
+     
 
 
 
