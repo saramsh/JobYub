@@ -137,7 +137,7 @@ namespace JobYub.Controllers
             //IQueryable<Advertisement> res = _context.Advertisement;
 
             var query = _context.Advertisement.AsQueryable();
-                     
+            query = query.Where(a => a.status == Status.confirmed);         
             if (model.AdvertisementType != null)
                 query = query.Where(a => a.advertisementType == model.AdvertisementType);
 

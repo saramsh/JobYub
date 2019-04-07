@@ -26,7 +26,7 @@ namespace JobYub.Models
 		public string Title { get; set; }
 
 		public string Description { get; set; }
-        public string Date { get; }
+        public string Date { get;  }
         public string StartDate { get; set; }
 
 		public string EndDate { get; set; }
@@ -45,7 +45,7 @@ namespace JobYub.Models
 
 		public int MaxSalary { get; set; }
        
-        public virtual IEnumerable<EducationLevel> EducationLevel {set;get;}
+        public virtual IEnumerable<AdvertisementEducationLevel> AdvertisementEducationLevels {set;get;}
 
 		public Int16 Age { get; set; }
         public int? MaxAge { get; set; }
