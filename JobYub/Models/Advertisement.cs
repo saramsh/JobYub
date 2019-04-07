@@ -13,13 +13,20 @@ namespace JobYub.Models
 
     public class Advertisement
 	{
+        public Advertisement()
+        {
+            
+            var now = DateTime.Now; PersianCalendar pc = new PersianCalendar(); Date = string.Format("{0}/{1}/{2}-{3}:{4}:{5}", pc.GetYear(now), pc.GetMonth(now), pc.GetDayOfMonth(now),pc.GetHour(now),pc.GetMinute(now),pc.GetSecond(now));
+            StartDate = Date;
+        }
+
 		public int ID { get; set; }
 
 		[Display(Name = "عنوان")]
 		public string Title { get; set; }
 
 		public string Description { get; set; }
-        public string Date { get { return Date; } set { var now = DateTime.Now; PersianCalendar pc = new PersianCalendar(); Date=pc.GetYear(now).ToString(); } }
+        public string Date { get; }
         public string StartDate { get; set; }
 
 		public string EndDate { get; set; }

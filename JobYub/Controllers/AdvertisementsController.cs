@@ -164,7 +164,14 @@ namespace JobYub.Controllers
                 model.EducationLevel.ForEach(eID => query = query.Where(a => a.EducationLevel.Contains(eID)));
             }
 
-            
+            if (model.MajorIDs != null)
+            {
+
+                foreach(var id in model.MajorIDs)
+                {
+                    query = query.Where(a => a.AdvertisementMajors.Where(am => am.MajorID == id) != null);
+                }
+            }
 
    
             
