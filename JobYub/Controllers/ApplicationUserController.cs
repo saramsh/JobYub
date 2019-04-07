@@ -143,13 +143,13 @@ namespace JobYub.Controllers
 			}
 		}
 
-		// GET: api/ApplicationUser/5
-		[HttpGet("{id}")]
-		public async Task<ActionResult<Advertisement>> GetAdvertisement(int id)
+		//  api/ApplicationUser
+		[HttpPost]
+		public async Task<ActionResult<Advertisement>> findApplicationUser(ApplicationUser user)
 		{
 			try
 			{
-				var applicationUser = await _context.ApplicationUser.FindAsync(id);
+				var applicationUser = await _context.ApplicationUser.FindAsync(user.Id);
 
 				if (applicationUser == null)
 				{

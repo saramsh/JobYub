@@ -55,11 +55,12 @@ class test    {
 
 		public double Latitude { get; set; }
 
-		public int JobCategoryID { get; set; }
+		public  int JobCategoryID { get; set; }
 
 		public virtual JobCategory JobCategory { get; set; }
 
-		public int CityID { get; set; }
+		//[ForeignKey("City")]
+		public  int CityID { get; set; }
 
 		public virtual City City { get; set; }
 

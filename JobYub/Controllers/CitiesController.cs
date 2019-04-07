@@ -25,7 +25,7 @@ namespace JobYub.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<City>>> GetCity()
         {
-            return await _context.City.ToListAsync();
+            return await _context.City.Include(c=>c.Advertisements).ToListAsync();
         }
 
         // GET: api/Cities/5

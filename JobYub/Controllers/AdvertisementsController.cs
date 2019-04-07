@@ -32,9 +32,9 @@ namespace JobYub.Controllers
         [HttpGet]
         public async Task<ActionResult> GetAdvertisement()
         {
-            var res=await _context.Advertisement.Where(a=>a.status==Status.confirmed).Select(a=>a.City).ToListAsync();
-			
-            if (res != null)
+			var res = await _context.Advertisement.Where(a => a.status == Status.confirmed).ToListAsync();//co => co.Employees.Select(emp => emp.Employee_Car)
+
+			if (res != null)
                 return Ok(res);
             else
                 return NotFound();

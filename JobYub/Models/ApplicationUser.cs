@@ -18,7 +18,7 @@ namespace JobYub.Models
         public int? MajorID { get; set; }
 		public virtual Major Major { get; set; }
 		public MilitaryStatus? MilitaryStatus { get; set; }
-        public int? CityID { get; set; }
+        public virtual int? CityID { get; set; }
         public virtual City City { get; set; }
         public int? RegionID { get; set; }
         public virtual Region Region { get; set; }
