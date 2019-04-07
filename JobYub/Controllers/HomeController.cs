@@ -16,7 +16,8 @@ namespace JobYub.Controllers
     {
         public IActionResult Index()
         {
-           
+            Advertisement ad = new Advertisement();
+            
             return View();
         }
         [Authorize]
