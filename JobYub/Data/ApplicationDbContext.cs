@@ -24,7 +24,7 @@ namespace JobYub.Data
         public DbSet<JobYub.Models.Payment> Payment { get; set; }
         public DbSet<JobYub.Models.Major> Major { get; set; }
 		public DbSet<JobYub.Models.ApplicationUser> ApplicationUser { get; set; }
-
+        public DbSet<EducationLevel> EducationLevel { get; set; }
 
 
 	}
