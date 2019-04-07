@@ -32,9 +32,8 @@ namespace JobYub.Controllers
         [HttpGet]
         public async Task<ActionResult> GetAdvertisement()
         {
-            var res = await _context.Advertisement.Where(a => a.status == Status.confirmed).Include(s => s.City).Include(s => s.Region).Include(s => s.Payment).Include(s => s.Tarrif).ToListAsync();
-
-
+            var res=await _context.Advertisement.Where(a=>a.status==Status.confirmed).Include("City").Include("JobCategory").ToListAsync();
+			
             if (res != null)
                 return Ok(res);
             else
@@ -48,7 +47,7 @@ namespace JobYub.Controllers
         {
             var advertisement = await _context.Advertisement.FindAsync(id);
 
-            if (advertisement == null&&advertisement.status!=Status.confirmed)
+            if (advertisement == null)
             {
                 return NotFound();
             }
@@ -56,9 +55,23 @@ namespace JobYub.Controllers
             return advertisement;
         }
 
-        // PUT: api/Advertisements/5
-       
-        [HttpPut("{id}")]
+		// GET: api/Advertisements/5
+		[HttpGet("{id}")]
+		public async Task<ActionResult<Advertisement>> GetUserAdvertisement(int id)
+		{
+			var advertisement = await _context.Advertisement.FindAsync(id);
+
+			if (advertisement == null)
+			{
+				return NotFound();
+			}
+
+			return advertisement;
+		}
+
+		// PUT: api/Advertisements/5
+
+		[HttpPut("{id}")]
         public async Task<IActionResult> PutAdvertisement(int id, Advertisement advertisement)
         {
             if (id != advertisement.ID)
@@ -87,19 +100,25 @@ namespace JobYub.Controllers
             return NoContent();
         }
 
-        // POST: api/Advertisements
-       
-        [HttpPost]
-        public async Task<ActionResult<Advertisement>> PostAdvertisement(Advertisement advertisement)
+		// POST: api/UserAdvertisements
+		[Route("/api/UserAdvertisements")]
+		[HttpPost]
+        public async Task<ActionResult<Advertisement>> UserAdvertisements(ApplicationUser user)
         {
-            //var user =await  _context.Users.FirstOrDefaultAsync(m => m.UserName == User.Identity.Name);
-            //advertisement.ApplicationUser = user;
-            //advertisement.ApplicationUserID = user.Id;
-            _context.Advertisement.Add(advertisement);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetAdvertisement", new { id = advertisement.ID }, advertisement);
-        }
+			try
+			{
+				var applicationUser =  _context.ApplicationUser.Where(u => u.Id == user.Id).Include(u => u.Advertisements).FirstOrDefault();
+				if (applicationUser != null)
+				{
+					return Ok(applicationUser.Advertisements);
+				}
+				return NotFound();
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500);
+			}
+		}
 
         // DELETE: api/Advertisements/5
       
@@ -130,7 +149,7 @@ namespace JobYub.Controllers
             //IQueryable<Advertisement> res = _context.Advertisement;
 
             var query = _context.Advertisement.AsQueryable();
-            query = query.Where(a => a.status == Status.confirmed);
+
             if (model.AdvertisementType != null)
                 query = query.Where(a => a.advertisementType == model.AdvertisementType);
 

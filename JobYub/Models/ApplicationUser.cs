@@ -31,7 +31,7 @@ namespace JobYub.Models
         public double? Latitude { get; set; }
         public double? Longtitude { get; set; }
         public bool Graduated { get; set; }
-        public int Experience { get; set; }
+        public int? Experience { get; set; }
         public virtual ICollection<Advertisement> Advertisements { get; set; }
 		public string VerificationCode { get; set; }
         public string Token { get; set; }
