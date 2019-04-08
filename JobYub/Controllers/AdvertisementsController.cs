@@ -88,7 +88,18 @@ namespace JobYub.Controllers
             try
             {
                 await _context.SaveChangesAsync();
-            }
+				//advertisement.a
+				_context.AdvertisementMajor.RemoveRange(_context.AdvertisementMajor.Where(adm => adm.AdvertisementID == advertisement.ID));
+				await _context.SaveChangesAsync();
+				//advertisement.AdvertisementMajors.ForEach(am => am.Advertisement = advertisement);
+				await _context.AdvertisementMajor.AddRangeAsync(advertisement.AdvertisementMajors);
+				await _context.SaveChangesAsync();
+				_context.AdvertisementEducationLevel.RemoveRange(_context.AdvertisementEducationLevel.Where(adm => adm.AdvertisementID == advertisement.ID));
+				await _context.SaveChangesAsync();
+				//advertisement.AdvertisementEducationLevels.ForEach(ae => ae.Advertisement = advertisement);
+				await _context.AdvertisementEducationLevel.AddRangeAsync(advertisement.AdvertisementEducationLevels);
+				await _context.SaveChangesAsync();
+			}
             catch (DbUpdateConcurrencyException)
             {
                 if (!AdvertisementExists(id))
