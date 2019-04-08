@@ -119,7 +119,7 @@ namespace JobYub.Models
         public List<int> CompanyTypeIDs { get; set; }
         public List<int> MajorIDs { get; set; }
         public bool? Graduated { get; set; }
-        public  List<EducationLevel> EducationLevel { get; set; }
+        public  List<int> EducationLevelIDs { get; set; }
         
 
     }
