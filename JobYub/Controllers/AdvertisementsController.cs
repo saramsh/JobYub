@@ -66,10 +66,10 @@ namespace JobYub.Controllers
           
             await _context.SaveChangesAsync();
 			
-            advertisement.AdvertisementMajors.ForEach(am => am.Advertisement = advertisement);
-            advertisement.AdvertisementEducationLevels.ForEach(ae => ae.Advertisement = advertisement);
+            //advertisement.AdvertisementMajors.ForEach(am => am.Advertisement = advertisement);
+            //advertisement.AdvertisementEducationLevels.ForEach(ae => ae.Advertisement = advertisement);
 
-            await _context.SaveChangesAsync();
+            //await _context.SaveChangesAsync();
 			return CreatedAtAction("GetAdvertisement", new { id = advertisement.ID }, advertisement);
 		}
 

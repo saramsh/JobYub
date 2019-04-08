@@ -7,7 +7,7 @@ namespace JobYub.Models
 {
     public class AdvertisementMajor
     {
-        public int ID { get; set; }
+       // public int ID { get; set; }
         public virtual int AdvertisementID { get; set; }
         public virtual Advertisement Advertisement { get; set; }
         public virtual int MajorID { get; set; }

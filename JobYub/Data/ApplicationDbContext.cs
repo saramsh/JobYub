@@ -13,6 +13,15 @@ namespace JobYub.Data
             : base(options)
         {
         }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<AdvertisementMajor>().HasKey(am => new { am.AdvertisementID, am.MajorID });
+            builder.Entity<AdvertisementEducationLevel>().HasKey(ae => new { ae.AdvertisementID, ae.EducationLevelID });
+
+       
+    }
         public DbSet<JobYub.Models.City> City { get; set; }
         public DbSet<JobYub.Models.Advertisement> Advertisement { get; set; }
         public DbSet<JobYub.Models.CompanyType> CompanyType { get; set; }
@@ -25,6 +34,8 @@ namespace JobYub.Data
         public DbSet<JobYub.Models.Major> Major { get; set; }
 		public DbSet<JobYub.Models.ApplicationUser> ApplicationUser { get; set; }
         public DbSet<EducationLevel> EducationLevel { get; set; }
+        public DbSet<AdvertisementEducationLevel> AdvertisementEducationLevels { get; set; }
+        public DbSet<AdvertisementMajor> AdvertisementMajors { get; set; }
 
 
 	}
