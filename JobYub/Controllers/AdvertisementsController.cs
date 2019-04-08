@@ -63,7 +63,7 @@ namespace JobYub.Controllers
 		{
 			_context.Advertisement.Add(advertisement);
 			await _context.SaveChangesAsync();
-
+			
 			return CreatedAtAction("GetAdvertisement", new { id = advertisement.ID }, advertisement);
 		}
 
@@ -95,8 +95,9 @@ namespace JobYub.Controllers
                 }
             }
 
-            return NoContent();
-        }
+			// return NoContent();
+			return Ok(advertisement);
+		}
 
 		// POST: api/UserAdvertisements
 		[Route("/api/UserAdvertisements")]
@@ -105,10 +106,10 @@ namespace JobYub.Controllers
         {
 			try
 			{
-				var applicationUser = await _context.ApplicationUser.Where(u => u.Id == user.Id).Include(u => u.Advertisements).FirstOrDefaultAsync();
-				if (applicationUser != null)
+				var advertisement = await _context.Advertisement.Where(a => a.ApplicationUserID == user.Id).Include(a => a.City).Include(a => a.JobCategory).Include(a => a.Payment).Include(a => a.Tarrif).ToListAsync();
+				if (advertisement != null)
 				{
-					return Ok(applicationUser.Advertisements);
+					return Ok(advertisement);
 				}
 				return NotFound();
 			}

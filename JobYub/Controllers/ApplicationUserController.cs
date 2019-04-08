@@ -95,7 +95,7 @@ namespace JobYub.Controllers
 
 			public bool Graduated { get; set; }
 
-			public int? EdcationLevel { get; set; }
+			public int? EducationLevel { get; set; }
 
 			public int? Experience { get; set; }
 
@@ -136,8 +136,8 @@ namespace JobYub.Controllers
 				ApUser.Longtitude = Input.longtitude;
 				ApUser.Latitude = Input.Latitude;
 				ApUser.Graduated = Input.Graduated;
-				if (Input.EdcationLevel != null)
-					ApUser.EducationLevel = (EducationLevel)Enum.Parse(typeof(EducationLevel), Input.EdcationLevel.ToString()); ;
+				if (Input.EducationLevel != null)
+					ApUser.EducationLevel =  await _context.EducationLevel.FindAsync( Input.EducationLevel);
 				ApUser.Experience = Input.Experience==null?ApUser.Experience:Input.Experience;
 				await _context.SaveChangesAsync();
 				return  Ok(ApUser);
