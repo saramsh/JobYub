@@ -186,9 +186,9 @@ namespace JobYub.Controllers
             if(model.Graduated!=null)
                 query = query.Where(a => a.Graduated == model.Graduated);
 
-            if (model.EducationLevel != null)
+            if (model.EducationLevelIDs != null)
             {
-                model.EducationLevel.ForEach(eID => query = query.Where(a => a.AdvertisementEducationLevels.Where(ae=>ae.EducationLevelID==eID.ID)!=null));
+                model.EducationLevelIDs.ForEach(eID => query = query.Where(a => a.AdvertisementEducationLevels.Where(ae=>ae.EducationLevelID==eID)!=null));
             }
 
 
