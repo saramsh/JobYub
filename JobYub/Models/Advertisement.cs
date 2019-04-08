@@ -45,7 +45,7 @@ namespace JobYub.Models
 
 		public int MaxSalary { get; set; }
        
-        public virtual IEnumerable<AdvertisementEducationLevel> AdvertisementEducationLevels {set;get;}
+        public virtual List<AdvertisementEducationLevel> AdvertisementEducationLevels {set;get;}
 
 		public Int16 Age { get; set; }
         public int? MaxAge { get; set; }
@@ -89,7 +89,7 @@ namespace JobYub.Models
 		public virtual string ApplicationUserID { get; set; }
 		public virtual ApplicationUser ApplicationUser { get; set; }
 
-		public virtual IEnumerable<AdvertisementMajor> AdvertisementMajors { get; set; }
+		public virtual List<AdvertisementMajor> AdvertisementMajors { get; set; }
 
 		public  AdvertisementType advertisementType {get;set;}
         //public int MajorID { get; set; }

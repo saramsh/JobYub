@@ -38,11 +38,6 @@ namespace JobYub.Models
 		public string VerificationCode { get; set; }
         public string Token { get; set; }
 
-
     }
-
-	
-    
 	public enum MilitaryStatus { PayanKhedmat, Moaf }
-
 }
