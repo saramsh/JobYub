@@ -65,9 +65,10 @@ namespace JobYub.Controllers
             //advertisement.AdvertisementMajors.ForEach(am=>)
           
             await _context.SaveChangesAsync();
-			
-            advertisement.AdvertisementMajors.ForEach(am => am.Advertisement = advertisement);
-            advertisement.AdvertisementEducationLevels.ForEach(ae => ae.Advertisement = advertisement);
+			if(advertisement.AdvertisementMajors!=null)
+				advertisement.AdvertisementMajors.ForEach(am => am.Advertisement = advertisement);
+			if (advertisement.AdvertisementEducationLevels!=null)
+				advertisement.AdvertisementEducationLevels.ForEach(ae => ae.Advertisement = advertisement);
 
             await _context.SaveChangesAsync();
 			return CreatedAtAction("GetAdvertisement", new { id = advertisement.ID }, advertisement);
@@ -92,12 +93,14 @@ namespace JobYub.Controllers
 				_context.AdvertisementMajor.RemoveRange(_context.AdvertisementMajor.Where(adm => adm.AdvertisementID == advertisement.ID));
 				await _context.SaveChangesAsync();
 				//advertisement.AdvertisementMajors.ForEach(am => am.Advertisement = advertisement);
-				await _context.AdvertisementMajor.AddRangeAsync(advertisement.AdvertisementMajors);
+				if(advertisement.AdvertisementMajors!=null)
+					await _context.AdvertisementMajor.AddRangeAsync(advertisement.AdvertisementMajors);
 				await _context.SaveChangesAsync();
 				_context.AdvertisementEducationLevel.RemoveRange(_context.AdvertisementEducationLevel.Where(adm => adm.AdvertisementID == advertisement.ID));
 				await _context.SaveChangesAsync();
 				//advertisement.AdvertisementEducationLevels.ForEach(ae => ae.Advertisement = advertisement);
-				await _context.AdvertisementEducationLevel.AddRangeAsync(advertisement.AdvertisementEducationLevels);
+				if(advertisement.AdvertisementEducationLevels!=null)
+					await _context.AdvertisementEducationLevel.AddRangeAsync(advertisement.AdvertisementEducationLevels);
 				await _context.SaveChangesAsync();
 			}
             catch (DbUpdateConcurrencyException)
@@ -190,9 +193,6 @@ namespace JobYub.Controllers
             {
                 model.EducationLevelIDs.ForEach(eID => query = query.Where(a => a.AdvertisementEducationLevels.Where(ae=>ae.EducationLevelID==eID)!=null));
             }
-
-
-
 
             if (model.MajorIDs != null)
             {
