@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace JobYub.Models
 {
-    public class ApplicationUser : IdentityUser
-    {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Website { get; set; }
-        public string BirthDate { get; set; }
-        public string HomePhone { get; set; }
-        public string Mobile { get; set; }
-        public virtual int EducationLevelID { get; set; }
+	public class ApplicationUser : IdentityUser
+	{
+		public string FirstName { get; set; }
+		public string LastName { get; set; }
+		public string Website { get; set; }
+		public string BirthDate { get; set; }
+		public string HomePhone { get; set; }
+		public string Mobile { get; set; }
+		public virtual int? EducationLevelID { get; set; }
         public virtual EducationLevel EducationLevel { get; set; }
         public virtual int? MajorID { get; set; }
 		public virtual Major Major { get; set; }

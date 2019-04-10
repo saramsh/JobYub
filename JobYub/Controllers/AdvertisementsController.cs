@@ -33,7 +33,7 @@ namespace JobYub.Controllers
         [HttpGet]
         public async Task<ActionResult> GetAdvertisement()
         {
-            var res = await _context.Advertisement.Where(a => a.status == Status.confirmed).Include(s => s.City).Include(s => s.Tarrif).Include(s => s.Region).ToListAsync();
+            var res = await _context.Advertisement.Where(a => a.status == Status.confirmed).Include(s => s.City).Include(s => s.Tarrif).Include(s => s.Region).Include(s => s.AdvertisementMajors).Include(s => s.AdvertisementEducationLevels).Include(s => s.ApplicationUser).ThenInclude(u=>u.City).ThenInclude(u => u.Name).Include(s => s.ApplicationUser).ThenInclude(u => u.Major).Include(s => s.ApplicationUser).ThenInclude(u => u.EducationLevel).Include(s => s.ApplicationUser).ThenInclude(u => u.CompanyType).ToListAsync();
 			
             if (res != null)
                 return Ok(res);
@@ -45,7 +45,8 @@ namespace JobYub.Controllers
         // GET: api/Advertisements/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Advertisement>> GetAdvertisement(int id)
-        {
+
+		{
             var advertisement = await _context.Advertisement.Include(a=>a.City).Include(a=>a.ApplicationUser).Include(a=>a.JobCategory).Include(a=>a.Payment).Include(a=>a.Region).Include(a=>a.Tarrif).FirstOrDefaultAsync(a=>a.ID==id);
 
             if (advertisement == null)
@@ -193,20 +194,13 @@ namespace JobYub.Controllers
                 model.EducationLevelIDs.ForEach(eID => query = query.Where(a => a.AdvertisementEducationLevels.Where(ae=>ae.EducationLevelID==eID)!=null));
             }
 
-
-
-
             if (model.MajorIDs != null)
             {
-
                 foreach(var id in model.MajorIDs)
                 {
                     query = query.Where(a => a.AdvertisementMajors.Where(am => am.MajorID == id) != null);
                 }
-            }
-
-   
-            
+            }         
             if (model.Experience != null)
                 query = query.Where(a => a.Experience <= model.Experience);
             
@@ -222,13 +216,7 @@ namespace JobYub.Controllers
             if (model.JobCategoryID != null)
                 query = query.Where(a => a.JobCategory.ID == model.JobCategoryID);
 
-
-
-
-
             return Ok(await query.ToListAsync());
-
-
 
         }
      
