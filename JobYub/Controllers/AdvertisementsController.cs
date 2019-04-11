@@ -10,33 +10,31 @@ using JobYub.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Linq.Expressions;
 
+
 namespace JobYub.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class AdvertisementsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-
-
-                      
         public AdvertisementsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
 
-
-
-      
         // GET: api/Advertisements
         [HttpGet]
-        public async Task<ActionResult> GetAdvertisement()
+        public async Task<ActionResult> GetAdvertisement(int? cityId, int page = 1)
         {
-            var res = await _context.Advertisement.Where(a => a.status == Status.confirmed).Include(s => s.City).Include(s => s.Tarrif).Include(s => s.Region).Include(s => s.AdvertisementMajors).Include(s => s.AdvertisementEducationLevels).Include(s => s.ApplicationUser).ThenInclude(u=>u.City).ThenInclude(u => u.Name).Include(s => s.ApplicationUser).ThenInclude(u => u.Major).Include(s => s.ApplicationUser).ThenInclude(u => u.EducationLevel).Include(s => s.ApplicationUser).ThenInclude(u => u.CompanyType).ToListAsync();
-			
-            if (res != null)
-                return Ok(res);
+            IQueryable<Advertisement> res = _context.Advertisement.Where(a => a.status == Status.confirmed).Include(s => s.City).Include(s => s.Tarrif).Include(s => s.Region).Include(s => s.AdvertisementMajors).Include(s => s.AdvertisementEducationLevels);
+            if (cityId != null&&cityId!=0)
+                res = res.Where(a=>a.CityID==cityId);
+            List<Advertisement> result =await  res.Skip((page-1) * 15).Take(15).ToListAsync();
+            if (result != null)
+                return Ok(result);
             else
                 return NotFound();
                     
@@ -47,7 +45,10 @@ namespace JobYub.Controllers
         public async Task<ActionResult<Advertisement>> GetAdvertisement(int id)
 
 		{
-            var advertisement = await _context.Advertisement.Include(a=>a.City).Include(a=>a.ApplicationUser).Include(a=>a.JobCategory).Include(a=>a.Payment).Include(a=>a.Region).Include(a=>a.Tarrif).Include(a => a.AdvertisementMajors).ThenInclude(am=>am.Major).Include(a => a.AdvertisementEducationLevels).ThenInclude(ael => ael.EducationLevel).FirstOrDefaultAsync(a=>a.ID==id);
+            var result =  _context.Advertisement.Where(a => a.status == Status.confirmed).Include(a => a.City).Include(a => a.ApplicationUser).Include(a => a.JobCategory).Include(a => a.Payment).Include(a => a.Region).Include(a => a.Tarrif).Include(a => a.AdvertisementEducationLevels).Include(a => a.AdvertisementMajors);
+           // result = await result.FirstOrDefaultAsync(a => a.ID == id);
+            var advertisement=await result.FirstOrDefaultAsync(a => a.ID == id);
+           
 
             if (advertisement == null)
             {
@@ -63,14 +64,8 @@ namespace JobYub.Controllers
 		public async Task<ActionResult<Advertisement>> PostAdvertisement(Advertisement advertisement)
 		{
 			_context.Advertisement.Add(advertisement);
-            //advertisement.AdvertisementMajors.ForEach(am=>)
           
             await _context.SaveChangesAsync();
-			
-            //advertisement.AdvertisementMajors.ForEach(am => am.Advertisement = advertisement);
-            //advertisement.AdvertisementEducationLevels.ForEach(ae => ae.Advertisement = advertisement);
-
-            //await _context.SaveChangesAsync();
 			return CreatedAtAction("GetAdvertisement", new { id = advertisement.ID }, advertisement);
 		}
 
@@ -175,8 +170,18 @@ namespace JobYub.Controllers
             if (model.CollaborationType != null)
                 query = query.Where(a => a.CollaborationType == model.CollaborationType);
 
-            if (model.Salary != null)
-                query = query.Where(a => a.MinSalary >= model.Salary && a.MaxSalary<=model.Salary);
+            if (model.MinSalary != null)
+                query = query.Where(a => a.MinSalary >= model.MinSalary);
+
+            if (model.MaxSalary != null)
+                query = query.Where(a => a.MaxSalary <= model.MaxSalary);
+
+            if (model.MinAge != null)
+                query = query.Where(a => a.MinAge >= model.MinAge);
+
+            if (model.MaxAge != null)
+                query = query.Where(a => a.MaxAge <= model.MaxAge);
+
 
             if (model.Gender != null)
                 query = query.Where(a => a.Gender == model.Gender);
@@ -191,14 +196,11 @@ namespace JobYub.Controllers
 
             if (model.EducationLevelIDs != null)
             {
-                //model.EducationLevelIDs.ForEach(eID => query = query.Where(a => a.AdvertisementEducationLevels.Where(ae=>ae.EducationLevelID==eID) != null));
-				//foreach(int eid in model.EducationLevelIDs)
-				//{
-				//	query = query.Where(a => a.AdvertisementEducationLevels.ForEach(ae => ae.EducationLevelID == eid));
-				//}
+             
+                model.EducationLevelIDs.ForEach(eID => query = query.Where(a => a.AdvertisementEducationLevels.Where(ae=>ae.EducationLevelID==eID)!=null));
             }
-			//(ae=>ae.EducationLevelID==eID)!=null
-			if (model.MajorIDs != null)
+
+            if (model.MajorIDs != null)
             {
                 foreach(var id in model.MajorIDs)
                 {
@@ -206,7 +208,7 @@ namespace JobYub.Controllers
                 }
             }         
             if (model.Experience != null)
-                query = query.Where(a => a.Experience >= model.Experience);
+                query = query.Where(a => a.Experience <= model.Experience);
             
             if (model.KeyWord != null)
                 query = query.Where(a => a.Title.Contains(model.KeyWord) || a.Description.Contains(model.KeyWord));
@@ -223,12 +225,8 @@ namespace JobYub.Controllers
             return Ok(await query.ToListAsync());
 
         }
-     
 
-
-
-
-		[Route("/Advertisements/Confirm")]
+        [Route("/Advertisements/Confirm")]
 		public async Task<ActionResult> ConfirmAdvertisements(AdvertisementIDsModel advertisementIDs)
 		{
 			try

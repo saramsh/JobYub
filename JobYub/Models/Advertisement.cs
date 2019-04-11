@@ -113,8 +113,10 @@ namespace JobYub.Models
         public AdvertisementType? AdvertisementType { get; set; }
         public int? Experience { get; set; }
         public CollaborationType? CollaborationType { get; set; }
-        public int? Salary { get; set; }
-       
+        public int? MinSalary { get; set; }
+        public int? MaxSalary { get; set; }
+        public int? MinAge { get; set; }
+        public int? MaxAge { get; set; }
         public Gender? Gender { get; set; }
         public List<int> CompanyTypeIDs { get; set; }
         public List<int> MajorIDs { get; set; }

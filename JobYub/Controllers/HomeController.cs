@@ -9,16 +9,24 @@ using Microsoft.AspNetCore.Authorization;
 using RestSharp;
 using Microsoft.Extensions.Configuration;
 using JobYub.Helpers;
+using Microsoft.Extensions.Logging;
+using JobYub.Data;
+
+using Microsoft.EntityFrameworkCore;
 
 namespace JobYub.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly ApplicationDbContext _context;
+        public HomeController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
         public IActionResult Index()
         {
-            Advertisement ad = new Advertisement();
-            
-            return View();
+           
+            return View(_context.Advertisement.Include(a=>a.ApplicationUser).ToList());
         }
         [Authorize]
         [HttpGet]
