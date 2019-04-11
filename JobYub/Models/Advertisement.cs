@@ -17,7 +17,7 @@ namespace JobYub.Models
         {
             
             var now = DateTime.Now; PersianCalendar pc = new PersianCalendar(); Date = string.Format("{0}/{1}/{2}-{3}:{4}:{5}", pc.GetYear(now), pc.GetMonth(now), pc.GetDayOfMonth(now),pc.GetHour(now),pc.GetMinute(now),pc.GetSecond(now));
-            StartDate = Date;
+            StartDate = now.ToLongTimeString();
         }
 
 		public int ID { get; set; }
