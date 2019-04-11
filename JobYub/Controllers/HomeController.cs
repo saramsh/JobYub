@@ -18,6 +18,8 @@ namespace JobYub.Controllers
 {
     public class HomeController : Controller
     {
+        public delegate void Logger();
+            
         private readonly ApplicationDbContext _context;
         public HomeController(ApplicationDbContext context)
         {
