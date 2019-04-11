@@ -47,7 +47,7 @@ namespace JobYub.Controllers
         public async Task<ActionResult<Advertisement>> GetAdvertisement(int id)
 
 		{
-            var advertisement = await _context.Advertisement.Include(a=>a.City).Include(a=>a.ApplicationUser).Include(a=>a.JobCategory).Include(a=>a.Payment).Include(a=>a.Region).Include(a=>a.Tarrif).FirstOrDefaultAsync(a=>a.ID==id);
+            var advertisement = await _context.Advertisement.Include(a=>a.City).Include(a=>a.ApplicationUser).Include(a=>a.JobCategory).Include(a=>a.Payment).Include(a=>a.Region).Include(a=>a.Tarrif).Include(a => a.AdvertisementMajors).ThenInclude(am=>am.Major).Include(a => a.AdvertisementEducationLevels).ThenInclude(ael => ael.EducationLevel).FirstOrDefaultAsync(a=>a.ID==id);
 
             if (advertisement == null)
             {
@@ -191,10 +191,14 @@ namespace JobYub.Controllers
 
             if (model.EducationLevelIDs != null)
             {
-                model.EducationLevelIDs.ForEach(eID => query = query.Where(a => a.AdvertisementEducationLevels.Where(ae=>ae.EducationLevelID==eID)!=null));
+                //model.EducationLevelIDs.ForEach(eID => query = query.Where(a => a.AdvertisementEducationLevels.Where(ae=>ae.EducationLevelID==eID) != null));
+				//foreach(int eid in model.EducationLevelIDs)
+				//{
+				//	query = query.Where(a => a.AdvertisementEducationLevels.ForEach(ae => ae.EducationLevelID == eid));
+				//}
             }
-
-            if (model.MajorIDs != null)
+			//(ae=>ae.EducationLevelID==eID)!=null
+			if (model.MajorIDs != null)
             {
                 foreach(var id in model.MajorIDs)
                 {
@@ -202,7 +206,7 @@ namespace JobYub.Controllers
                 }
             }         
             if (model.Experience != null)
-                query = query.Where(a => a.Experience <= model.Experience);
+                query = query.Where(a => a.Experience >= model.Experience);
             
             if (model.KeyWord != null)
                 query = query.Where(a => a.Title.Contains(model.KeyWord) || a.Description.Contains(model.KeyWord));
