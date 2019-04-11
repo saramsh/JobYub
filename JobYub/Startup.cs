@@ -37,6 +37,7 @@ namespace JobYub
         {
 
             services.AddCors();
+            
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -47,6 +48,7 @@ namespace JobYub
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
+            
             services.AddDefaultIdentity<ApplicationUser>(options=>options.User.RequireUniqueEmail=false)
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -110,7 +112,7 @@ namespace JobYub
               .AllowAnyOrigin()
               .AllowAnyMethod()
               .AllowAnyHeader());
-
+            
            
 
 
