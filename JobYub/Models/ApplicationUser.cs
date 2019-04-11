@@ -39,5 +39,5 @@ namespace JobYub.Models
         public string Token { get; set; }
 
     }
-	public enum MilitaryStatus { PayanKhedmat, Moaf }
+	public enum MilitaryStatus { PayanKhedmat, MoafiatDaem, MoafiatTahsili,DarHaleAnjam, Mashmool }
 }

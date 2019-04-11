@@ -23,8 +23,10 @@ namespace JobYub.Models
 		public int ID { get; set; }
 
 		[Display(Name = "عنوان")]
+		[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 0)]
 		public string Title { get; set; }
 
+		[StringLength(1000, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 0)]
 		public string Description { get; set; }
         public string Date { get;  }
         public string StartDate { get; set; }
@@ -34,7 +36,9 @@ namespace JobYub.Models
 		public string TagIDs { get; set; }
 
 		public int Experience { get; set; }
-        public string PhoneNumber { get; set; }
+
+		[StringLength(11, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 11)]
+		public string PhoneNumber { get; set; }
         public string SalaryType { get; set; }
 
                                            //	public int MajorId { get; set; }
@@ -86,11 +90,14 @@ namespace JobYub.Models
 		public int ReportNum { get; set; }
 
 		public bool? Graduated { get; set; }
+
+		[StringLength(40, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 30)]
 		public virtual string ApplicationUserID { get; set; }
 		public virtual ApplicationUser ApplicationUser { get; set; }
 
 		public virtual List<AdvertisementMajor> AdvertisementMajors { get; set; }
 
+		[Required]
 		public  AdvertisementType advertisementType {get;set;}
         //public int MajorID { get; set; }
         //public Major Major { get; set; }

@@ -34,7 +34,7 @@ namespace JobYub.Controllers
                 res = res.Where(a=>a.CityID==cityId);
             List<Advertisement> result =await  res.Skip((page-1) * 15).Take(15).ToListAsync();
             if (result != null)
-                return Ok(result);
+                return Ok(new { Total = result.Count(), result = result });
             else
                 return NotFound();
                     
@@ -45,7 +45,7 @@ namespace JobYub.Controllers
         public async Task<ActionResult<Advertisement>> GetAdvertisement(int id)
 
 		{
-            var result =  _context.Advertisement.Where(a => a.status == Status.confirmed).Include(a => a.City).Include(a => a.ApplicationUser).Include(a => a.JobCategory).Include(a => a.Payment).Include(a => a.Region).Include(a => a.Tarrif).Include(a => a.AdvertisementEducationLevels).Include(a => a.AdvertisementMajors);
+            var result =  _context.Advertisement.Where(a => a.status == Status.confirmed).Include(a => a.City).Include(a => a.ApplicationUser).Include(a => a.JobCategory).Include(a => a.Payment).Include(a => a.Region).Include(a => a.Tarrif).Include(a => a.AdvertisementEducationLevels).ThenInclude(ael => ael.EducationLevel).Include(a => a.AdvertisementMajors).ThenInclude(am=>am.Major);
            // result = await result.FirstOrDefaultAsync(a => a.ID == id);
             var advertisement=await result.FirstOrDefaultAsync(a => a.ID == id);
            
@@ -63,6 +63,7 @@ namespace JobYub.Controllers
 		[HttpPost]
 		public async Task<ActionResult<Advertisement>> PostAdvertisement(Advertisement advertisement)
 		{
+
 			_context.Advertisement.Add(advertisement);
           
             await _context.SaveChangesAsync();
@@ -134,9 +135,27 @@ namespace JobYub.Controllers
 			}
 		}
 
-        // DELETE: api/Advertisements/5
-      
-        [HttpDelete("{id}")]
+		// GET: api/UserAdvertisement
+		[Route("/api/UserAdvertisement")]
+		[HttpGet("{id}")]
+		public async Task<ActionResult<Advertisement>> UserAdvertisement(int id)
+		{
+			var result = _context.Advertisement.Where(a => a.ID == id).Include(a => a.City).Include(a => a.ApplicationUser).Include(a => a.JobCategory).Include(a => a.Payment).Include(a => a.Region).Include(a => a.Tarrif).Include(a => a.AdvertisementEducationLevels).ThenInclude(ael => ael.EducationLevel).Include(a => a.AdvertisementMajors).ThenInclude(am => am.Major);
+			// result = await result.FirstOrDefaultAsync(a => a.ID == id);
+			var advertisement = await result.FirstOrDefaultAsync();
+
+
+			if (advertisement == null)
+			{
+				return NotFound();
+			}
+
+			return advertisement;
+		}
+
+		// DELETE: api/Advertisements/5
+
+		[HttpDelete("{id}")]
         public async Task<ActionResult<Advertisement>> DeleteAdvertisement(int id)
         {
             var advertisement = await _context.Advertisement.FindAsync(id);
