@@ -14,9 +14,13 @@
 
 
   <ItemGroup>
+    <PackageReference Include="Geocoding.NetCore.APIs" Version="1.0.0" />
+    <PackageReference Include="GeoCoordinate" Version="2.0.1" />
+    <PackageReference Include="GeoCoordinate.NetStandard1" Version="1.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.OData" Version="7.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Spatial" Version="7.5.4" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.4.4" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
     <PackageReference Include="RestSharp" Version="106.6.9" />

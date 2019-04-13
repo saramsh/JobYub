@@ -9,6 +9,8 @@ using JobYub.Data;
 using JobYub.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Linq.Expressions;
+using Microsoft.Spatial;
+using GeoCoordinatePortable;
 
 
 namespace JobYub.Controllers
@@ -24,7 +26,7 @@ namespace JobYub.Controllers
         public AdvertisementsController(ApplicationDbContext context)
         {
             _context = context;
-            
+           
         }
 
 
@@ -178,12 +180,12 @@ namespace JobYub.Controllers
         }
         [HttpPost]
         [Route("/Advertisements/search")]
-        public async Task<IActionResult> SearchAsync(AdvertisementSearchModel model)
+        public async Task<IActionResult> SearchAsync(AdvertisementSearchModel model, int page = 1 ,string orderBy="date")
         {
                
             //IQueryable<Advertisement> res = _context.Advertisement;
 
-            var query = _context.Advertisement.AsQueryable();
+            var query = _context.Advertisement.Where(a=>a.status==Status.confirmed).AsQueryable();
             query = query.Where(a => a.status == Status.confirmed);         
             if (model.AdvertisementType != null)
                 query = query.Where(a => a.advertisementType == model.AdvertisementType);
@@ -209,27 +211,26 @@ namespace JobYub.Controllers
 
             if (model.CompanyTypeIDs != null)
             {
-                model.CompanyTypeIDs.ForEach(cID => query = query.Where(a => a.ApplicationUser.CompanyTypeID == cID));
-            }
+				//model.CompanyTypeIDs.ForEach(cID => query = query.Where(a => a.ApplicationUser.CompanyTypeID == cID));
+				query = query.Where(a => model.CompanyTypeIDs.Contains(a.ApplicationUser.CompanyTypeID));
+			}
             
             if(model.Graduated!=null)
                 query = query.Where(a => a.Graduated == model.Graduated);
 
             if (model.EducationLevelIDs != null)
             {
-             
-                model.EducationLevelIDs.ForEach(eID => query = query.Where(a => a.AdvertisementEducationLevels.Where(ae=>ae.EducationLevelID==eID)!=null));
+				query = query.Where(a => a.AdvertisementEducationLevels.Where(ael=>model.EducationLevelIDs.Contains(ael.EducationLevelID)).Count()!=0);
+               // model.EducationLevelIDs.ForEach(eID => query = query.Where(a => a.AdvertisementEducationLevels.Where(ae=>ae.EducationLevelID==eID)!=null));
+
             }
 
             if (model.MajorIDs != null)
             {
-                foreach(var id in model.MajorIDs)
-                {
-                    query = query.Where(a => a.AdvertisementMajors.Where(am => am.MajorID == id) != null);
-                }
-            }         
+				query = query.Where(a => a.AdvertisementMajors.Where(am =>model.MajorIDs.Contains(am.MajorID)).Count() != 0);
+			}         
             if (model.Experience != null)
-                query = query.Where(a => a.Experience <= model.Experience);
+                query = query.Where(a => a.Experience >= model.Experience);
             
             if (model.KeyWord != null)
                 query = query.Where(a => a.Title.Contains(model.KeyWord) || a.Description.Contains(model.KeyWord));
@@ -243,9 +244,46 @@ namespace JobYub.Controllers
             if (model.JobCategoryID != null)
                 query = query.Where(a => a.JobCategory.ID == model.JobCategoryID);
 
-            return Ok(await query.ToListAsync());
+			Dictionary<Advertisement, double?> advertisementDist = new Dictionary<Advertisement, double?>();
+			
+			switch (orderBy)
+			{
+				case "distance":
+					{
+						if (model.Latitude != null && model.Longitude != null)
+						{
+							var userLocation= new GeoCoordinate(Convert.ToDouble(model.Latitude), Convert.ToDouble(model.Longitude));
+							//var userLocation = GeographyPoint.Create(Convert.ToDouble(model.Latitude), Convert.ToDouble(model.Longitude));
+							foreach (Advertisement ads in query)
+							{
+								if (ads.Latitude != null && ads.Longitude != null)
+								{
+									var advertisementLocation = new GeoCoordinate(Convert.ToDouble(ads.Latitude), Convert.ToDouble(ads.Longitude));
+									//var advertisementLocation = GeographyPoint.Create(Convert.ToDouble(ads.Latitude), Convert.ToDouble(ads.Longitude));
+									double? dd = userLocation.GetDistanceTo(advertisementLocation);
+									//double? dd=GeographyOperationsExtensions.Distance(userLocation, advertisementLocation);
+									//ge
+									//double? dd = userLocation.Distance(advertisementLocation).Value;
+									advertisementDist.Add(ads, dd);
+								}
+							}
+						}
+						advertisementDist = advertisementDist.OrderBy(a => a.Value).ToDictionary(z => z.Key, y => y.Value); 
+						
+						break;
+					}
+				case "date":
+					{
+						//advertisementDist = new Dictionary<Advertisement, double?>();
+						advertisementDist= query.OrderByDescending(a => a.StartDate).ToDictionary(x => x, x =>  (double?)0.0);
+						break;
+					}
+			}
 
-        }
+			advertisementDist =  advertisementDist.Skip((page - 1) * 15).Take(15).ToDictionary(z => z.Key, y => y.Value); 
+			//return Ok(await query.ToListAsync());
+			return Ok(new { advertisments = advertisementDist.Keys, distances = advertisementDist.Values });
+		}
 
         [Route("/Advertisements/Confirm")]
 		public async Task<ActionResult> ConfirmAdvertisements(AdvertisementIDsModel advertisementIDs)

@@ -125,13 +125,16 @@ namespace JobYub.Models
         public int? MinAge { get; set; }
         public int? MaxAge { get; set; }
         public Gender? Gender { get; set; }
-        public List<int> CompanyTypeIDs { get; set; }
-        public List<int> MajorIDs { get; set; }
+        public List<int?> CompanyTypeIDs { get; set; }
+        public List<int?> MajorIDs { get; set; }
         public bool? Graduated { get; set; }
-        public  List<int> EducationLevelIDs { get; set; }
-        
+        public  List<int?> EducationLevelIDs { get; set; }
 
-    }
+		public double? Latitude { get; set; }
+		public double? Longitude { get; set; }
+
+
+	}
 
 	public class KeywordSearchModel
 	{
