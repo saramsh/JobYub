@@ -20,6 +20,7 @@ using JobYub.Helpers;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 
 namespace JobYub
 {
@@ -38,6 +39,7 @@ namespace JobYub
 
             services.AddCors();
             
+            // services.AddIdentity<ApplicationUser,IdentityRole>();
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -52,7 +54,7 @@ namespace JobYub
             services.AddDefaultIdentity<ApplicationUser>(options=>options.User.RequireUniqueEmail=false)
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-
+            
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddJsonOptions(options =>
             {
                 options.SerializerSettings.ReferenceLoopHandling =
@@ -89,8 +91,13 @@ namespace JobYub
                     ValidateAudience = false
                 };
             });
+           
+            // services.AddIdentity<ApplicationUser, ApplicationRole>().AddEntityFrameworkStores<ApplicationDbContext>();
+
+           // services.AddScoped<ClaimsPrincipal, CustomClaimsPrincipal>();
             // services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
+            services.AddHealthChecks();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -112,8 +119,8 @@ namespace JobYub
               .AllowAnyOrigin()
               .AllowAnyMethod()
               .AllowAnyHeader());
-            
-           
+
+            app.UseHealthChecks("/health");
 
 
             app.UseHttpsRedirection();

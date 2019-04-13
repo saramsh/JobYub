@@ -189,6 +189,7 @@ namespace JobYub.Areas.Identity.Pages.Account
 					{
 						user = new ApplicationUser { UserName = string.IsNullOrEmpty(Input.Email) ? Guid.NewGuid().ToString() : Input.Email, PhoneNumber = Input.PhoneNumber};
 						var result = await _userManager.CreateAsync(user);
+                        
 						if (result.Succeeded)
 						{
 
@@ -216,7 +217,8 @@ namespace JobYub.Areas.Identity.Pages.Account
                     user.VerificationCode =await _userManager.GenerateChangePhoneNumberTokenAsync(user, user.PhoneNumber);
                     await _context.SaveChangesAsync();
                     AuthMessageSender s = new AuthMessageSender();
-                    await s.SendSmsAsync(user.PhoneNumber, user.VerificationCode);
+                    string messageToSend ="Your jobino verification code is "+ user.VerificationCode;
+                    await s.SendSmsAsync(user.PhoneNumber, messageToSend);
 
 					//var resul = await _signInManager.PasswordSignInAsync("a@a.com", "A@aaa1", false, lockoutOnFailure: true);
 					//new { PhoneNumber = user.PhoneNumber }
