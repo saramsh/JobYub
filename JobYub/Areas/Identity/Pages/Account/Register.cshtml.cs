@@ -189,8 +189,8 @@ namespace JobYub.Areas.Identity.Pages.Account
 					{
 						user = new ApplicationUser { UserName = string.IsNullOrEmpty(Input.Email) ? Guid.NewGuid().ToString() : Input.Email, PhoneNumber = Input.PhoneNumber};
 						var result = await _userManager.CreateAsync(user);
-                        
-						if (result.Succeeded)
+                        await _userManager.AddToRoleAsync(user, "Users");
+                        if (result.Succeeded)
 						{
 
 							_logger.LogInformation("User created a new account with password.");

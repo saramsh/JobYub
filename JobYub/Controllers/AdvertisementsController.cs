@@ -9,37 +9,41 @@ using JobYub.Data;
 using JobYub.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Linq.Expressions;
-
+using Microsoft.AspNetCore.Identity;
 
 namespace JobYub.Controllers
 {
     [Route("api/[controller]")]
-   // [Authorize]
+    [Authorize]
     [ApiController]
     public class AdvertisementsController : ControllerBase
     {
        
         
         private readonly ApplicationDbContext _context;
-        public AdvertisementsController(ApplicationDbContext context)
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<ApplicationRole> _roleManager;
+        public AdvertisementsController(ApplicationDbContext context,UserManager<ApplicationUser> UM,RoleManager<ApplicationRole> RM)
         {
             _context = context;
-            
+            _userManager = UM;
+            _roleManager = RM;
         }
 
 
         // GET: api/Advertisements
        
         [HttpGet]
-        public async Task<ActionResult> GetAdvertisement(int? cityId, int page = 1, bool confirmed=false)
+        public async Task<ActionResult> GetAdvertisement(int? cityId, int page = 1)
         {
-            IQueryable<Advertisement> res = _context.Advertisement.Include(s => s.City).Include(s => s.Tarrif).Include(s => s.Region).Include(s => s.AdvertisementMajors).Include(s => s.AdvertisementEducationLevels);
             
+            IQueryable<Advertisement> res = _context.Advertisement.Include(s => s.City).Include(s => s.Tarrif).Include(s => s.Region).Include(s => s.AdvertisementMajors).Include(s => s.AdvertisementEducationLevels);
+            res = User.IsInRole("Administrators") ? res : res.Where(s => s.status == Status.confirmed);
             if (cityId != null && cityId != 0)
                 res = res.Where(a=>a.CityID==cityId);
             List<Advertisement> result =await  res.Skip((page-1) * 15).Take(15).ToListAsync();
             if (result != null)
-                return Ok(new { Total = result.Count(), result = result });
+                return Ok(new { Total = res.Count(), result = result });
             else
                 return NotFound();
                     
@@ -49,11 +53,19 @@ namespace JobYub.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Advertisement>> GetAdvertisement(int id)
 		{
+            //var h = await _userManager.FindByNameAsync("spnsoheil@gmail.com");
+            //var n= User.Identity.Name;
+            //await _roleManager.CreateAsync(new ApplicationRole() { Name="Administrators"});
+            //await _roleManager.CreateAsync(new ApplicationRole() { Name = "Users" });
+            //await _roleManager.CreateAsync(new ApplicationRole() { Name = "Moderators" });
             var result =  _context.Advertisement.Include(a => a.City).Include(a => a.ApplicationUser).ThenInclude(u=>u.CompanyType).Include(a => a.JobCategory).Include(a => a.Payment).Include(a => a.Region).Include(a => a.Tarrif).Include(a => a.AdvertisementEducationLevels).ThenInclude(ael => ael.EducationLevel).Include(a => a.AdvertisementMajors).ThenInclude(am=>am.Major);
-           // result = await result.FirstOrDefaultAsync(a => a.ID == id);
+            
+            // result = await result.FirstOrDefaultAsync(a => a.ID == id);
+            
             var advertisement=await result.FirstOrDefaultAsync(a => a.ID == id);
-            if (advertisement == null)
-            {
+            if((advertisement.status!=Status.confirmed&&User.IsInRole("Adminstrators")==false)|| advertisement == null)
+            { 
+                
                 return NotFound();
             }
 
@@ -65,8 +77,10 @@ namespace JobYub.Controllers
 		[HttpPost]
 		public async Task<ActionResult<Advertisement>> PostAdvertisement(Advertisement advertisement)
 		{
-
-			_context.Advertisement.Add(advertisement);
+            ApplicationUser u = _context.ApplicationUser.Find(User.Identity.Name);
+            advertisement.ApplicationUser = u;
+            
+            _context.Advertisement.Add(advertisement);
             
             await _context.SaveChangesAsync();
 			return CreatedAtAction("GetAdvertisement", new { id = advertisement.ID }, advertisement);
@@ -82,6 +96,19 @@ namespace JobYub.Controllers
                 return BadRequest();
             }
 
+            if (!User.IsInRole("Administrators"))
+            {
+
+                ApplicationUser u = _context.ApplicationUser.Find(User.Identity.Name);
+                if (u.Advertisements.Contains(advertisement))
+                {
+                    advertisement.ApplicationUser = u;
+                }
+                else
+                {
+                    return Unauthorized();
+                }
+            }
             _context.Entry(advertisement).State = EntityState.Modified;
 
             try
@@ -99,6 +126,7 @@ namespace JobYub.Controllers
                 //advertisement.AdvertisementEducationLevels.ForEach(ae => ae.Advertisement = advertisement);
                 if (advertisement.AdvertisementEducationLevels != null)
                     await _context.AdvertisementEducationLevels.AddRangeAsync(advertisement.AdvertisementEducationLevels);
+
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)

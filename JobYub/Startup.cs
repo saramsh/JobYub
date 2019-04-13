@@ -38,7 +38,13 @@ namespace JobYub
         {
 
             services.AddCors();
-            
+            services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+    {
+                options.User.RequireUniqueEmail = false;
+            })
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultUI(UIFramework.Bootstrap4)
+    .AddDefaultTokenProviders();
             // services.AddIdentity<ApplicationUser,IdentityRole>();
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -51,9 +57,9 @@ namespace JobYub
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             
-            services.AddDefaultIdentity<ApplicationUser>(options=>options.User.RequireUniqueEmail=false)
-                .AddDefaultUI(UIFramework.Bootstrap4)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            //services.AddDefaultIdentity<ApplicationUser,>(options=>options.User.RequireUniqueEmail=false)
+            //    .AddDefaultUI(UIFramework.Bootstrap4)
+            //    .AddEntityFrameworkStores<ApplicationDbContext>();
             
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddJsonOptions(options =>
             {
