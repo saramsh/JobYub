@@ -49,7 +49,7 @@ namespace JobYub
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             
-            services.AddDefaultIdentity<ApplicationUser>(options=>options.User.RequireUniqueEmail=false)
+            services.AddDefaultIdentity<ApplicationUser>(options=>options.User.RequireUniqueE il=false)
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 

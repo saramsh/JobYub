@@ -9,7 +9,7 @@ using JobYub.Data;
 using JobYub.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Linq.Expressions;
-
+using Microsoft.AspNetCore.Identity;
 
 namespace JobYub.Controllers
 {
@@ -29,7 +29,8 @@ namespace JobYub.Controllers
         [HttpGet]
         public async Task<ActionResult> GetAdvertisement(int? cityId, int page = 1)
         {
-            IQueryable<Advertisement> res = _context.Advertisement.Where(a => a.status == Status.confirmed).Include(s => s.City).Include(s => s.Tarrif).Include(s => s.Region).Include(s => s.AdvertisementMajors).Include(s => s.AdvertisementEducationLevels);
+			
+			IQueryable<Advertisement> res = _context.Advertisement.Where(a => a.status == Status.confirmed).Include(s => s.City).Include(s => s.Tarrif).Include(s => s.Region).Include(s => s.AdvertisementMajors).Include(s => s.AdvertisementEducationLevels);
             if (cityId != null&&cityId!=0)
                 res = res.Where(a=>a.CityID==cityId);
             List<Advertisement> result =await  res.Skip((page-1) * 15).Take(15).ToListAsync();
@@ -45,7 +46,8 @@ namespace JobYub.Controllers
         public async Task<ActionResult<Advertisement>> GetAdvertisement(int id)
 
 		{
-            var result =  _context.Advertisement.Where(a => a.status == Status.confirmed).Include(a => a.City).Include(a => a.ApplicationUser).Include(a => a.JobCategory).Include(a => a.Payment).Include(a => a.Region).Include(a => a.Tarrif).Include(a => a.AdvertisementEducationLevels).ThenInclude(ael => ael.EducationLevel).Include(a => a.AdvertisementMajors).ThenInclude(am=>am.Major);
+			var uid = HttpContext.User.Identity.Name;
+			var result =  _context.Advertisement.Where(a => a.status == Status.confirmed).Include(a => a.City).Include(a => a.ApplicationUser).Include(a => a.JobCategory).Include(a => a.Payment).Include(a => a.Region).Include(a => a.Tarrif).Include(a => a.AdvertisementEducationLevels).ThenInclude(ael => ael.EducationLevel).Include(a => a.AdvertisementMajors).ThenInclude(am=>am.Major);
            // result = await result.FirstOrDefaultAsync(a => a.ID == id);
             var advertisement=await result.FirstOrDefaultAsync(a => a.ID == id);
            
@@ -136,22 +138,22 @@ namespace JobYub.Controllers
 		}
 
 		// GET: api/UserAdvertisement
-		[Route("/api/UserAdvertisement")]
-		[HttpGet("{id}")]
-		public async Task<ActionResult<Advertisement>> UserAdvertisement(int id)
-		{
-			var result = _context.Advertisement.Where(a => a.ID == id).Include(a => a.City).Include(a => a.ApplicationUser).Include(a => a.JobCategory).Include(a => a.Payment).Include(a => a.Region).Include(a => a.Tarrif).Include(a => a.AdvertisementEducationLevels).ThenInclude(ael => ael.EducationLevel).Include(a => a.AdvertisementMajors).ThenInclude(am => am.Major);
-			// result = await result.FirstOrDefaultAsync(a => a.ID == id);
-			var advertisement = await result.FirstOrDefaultAsync();
+		//[Route("/api/UserAdvertisement")]
+		//[HttpGet("{id}")]
+		//public async Task<ActionResult<Advertisement>> UserAdvertisement(int id)
+		//{
+		//	var result = _context.Advertisement.Where(a => a.ID == id).Include(a => a.City).Include(a => a.ApplicationUser).Include(a => a.JobCategory).Include(a => a.Payment).Include(a => a.Region).Include(a => a.Tarrif).Include(a => a.AdvertisementEducationLevels).ThenInclude(ael => ael.EducationLevel).Include(a => a.AdvertisementMajors).ThenInclude(am => am.Major);
+		//	// result = await result.FirstOrDefaultAsync(a => a.ID == id);
+		//	var advertisement = await result.FirstOrDefaultAsync();
 
 
-			if (advertisement == null)
-			{
-				return NotFound();
-			}
+		//	if (advertisement == null)
+		//	{
+		//		return NotFound();
+		//	}
 
-			return advertisement;
-		}
+		//	return advertisement;
+		//}
 
 		// DELETE: api/Advertisements/5
 
