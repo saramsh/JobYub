@@ -9,29 +9,33 @@ using JobYub.Data;
 using JobYub.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Linq.Expressions;
-using Microsoft.AspNetCore.Identity;
+
 
 namespace JobYub.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
+   // [Authorize]
     [ApiController]
     public class AdvertisementsController : ControllerBase
     {
+       
+        
         private readonly ApplicationDbContext _context;
         public AdvertisementsController(ApplicationDbContext context)
         {
             _context = context;
+            
         }
 
 
         // GET: api/Advertisements
+       
         [HttpGet]
-        public async Task<ActionResult> GetAdvertisement(int? cityId, int page = 1)
+        public async Task<ActionResult> GetAdvertisement(int? cityId, int page = 1, bool confirmed=false)
         {
-			
-			IQueryable<Advertisement> res = _context.Advertisement.Where(a => a.status == Status.confirmed).Include(s => s.City).Include(s => s.Tarrif).Include(s => s.Region).Include(s => s.AdvertisementMajors).Include(s => s.AdvertisementEducationLevels);
-            if (cityId != null&&cityId!=0)
+            IQueryable<Advertisement> res = _context.Advertisement.Include(s => s.City).Include(s => s.Tarrif).Include(s => s.Region).Include(s => s.AdvertisementMajors).Include(s => s.AdvertisementEducationLevels);
+            
+            if (cityId != null && cityId != 0)
                 res = res.Where(a=>a.CityID==cityId);
             List<Advertisement> result =await  res.Skip((page-1) * 15).Take(15).ToListAsync();
             if (result != null)
@@ -44,14 +48,10 @@ namespace JobYub.Controllers
         // GET: api/Advertisements/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Advertisement>> GetAdvertisement(int id)
-
 		{
-			var uid = HttpContext.User.Identity.Name;
-			var result =  _context.Advertisement.Where(a => a.status == Status.confirmed).Include(a => a.City).Include(a => a.ApplicationUser).Include(a => a.JobCategory).Include(a => a.Payment).Include(a => a.Region).Include(a => a.Tarrif).Include(a => a.AdvertisementEducationLevels).ThenInclude(ael => ael.EducationLevel).Include(a => a.AdvertisementMajors).ThenInclude(am=>am.Major);
+            var result =  _context.Advertisement.Include(a => a.City).Include(a => a.ApplicationUser).ThenInclude(u=>u.CompanyType).Include(a => a.JobCategory).Include(a => a.Payment).Include(a => a.Region).Include(a => a.Tarrif).Include(a => a.AdvertisementEducationLevels).ThenInclude(ael => ael.EducationLevel).Include(a => a.AdvertisementMajors).ThenInclude(am=>am.Major);
            // result = await result.FirstOrDefaultAsync(a => a.ID == id);
             var advertisement=await result.FirstOrDefaultAsync(a => a.ID == id);
-           
-
             if (advertisement == null)
             {
                 return NotFound();
@@ -67,7 +67,7 @@ namespace JobYub.Controllers
 		{
 
 			_context.Advertisement.Add(advertisement);
-          
+            
             await _context.SaveChangesAsync();
 			return CreatedAtAction("GetAdvertisement", new { id = advertisement.ID }, advertisement);
 		}

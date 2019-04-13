@@ -61,6 +61,7 @@ namespace JobYub.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnGetAsync(string returnUrl = null)
         {
+
             return RedirectToPage("./Register", new { ReturnUrl = returnUrl });
 
             //if (!string.IsNullOrEmpty(ErrorMessage))

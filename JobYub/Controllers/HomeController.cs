@@ -13,21 +13,32 @@ using Microsoft.Extensions.Logging;
 using JobYub.Data;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace JobYub.Controllers
 {
     public class HomeController : Controller
     {
         public delegate void Logger();
-            
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly ApplicationDbContext _context;
-        public HomeController(ApplicationDbContext context)
+        IServiceProvider ServiceProvider;
+        public HomeController(ApplicationDbContext context, UserManager<ApplicationUser> userManager,IServiceProvider serviceProvider)
         {
+
             _context = context;
+            _userManager = userManager;
+            ServiceProvider = serviceProvider;
+            
+            
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-           
+            // var roles =await _userManager.GetRolesAsync(_context.ApplicationUser.FirstOrDefault(u => u.UserName == User.Identity.Name));
+            //var RoleManager = ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            
             return View(_context.Advertisement.Include(a=>a.ApplicationUser).ToList());
         }
         [Authorize]
@@ -35,7 +46,8 @@ namespace JobYub.Controllers
         public IActionResult Privacy()
         {
             AuthMessageSender s = new AuthMessageSender();
-           //  s.SendSmsAsync("9010596159", "test again");
+            
+            //  s.SendSmsAsync("9010596159", "test again");
             
             return View();
         }

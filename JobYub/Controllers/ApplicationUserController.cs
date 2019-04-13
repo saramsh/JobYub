@@ -47,9 +47,11 @@ namespace JobYub.Controllers
 			[StringLength(11, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 8)]
 			public string HomePhone { get; set; }
 
-			//[Required]
-			[EmailAddress]
-			public string Email { get; set; }
+            //[Required]
+
+            [EmailAddress]
+
+            public string Email { get; set; }
 
 			[MaxLength(6)]
 			public string VerificationCode { get; set; }
@@ -115,6 +117,7 @@ namespace JobYub.Controllers
 			}
 			try
 			{
+
 				var ApUser = await _context.ApplicationUser.FindAsync( Input.ID);
 				ApUser.FirstName = Input.FirstName;
 				ApUser.LastName = Input.LastName;

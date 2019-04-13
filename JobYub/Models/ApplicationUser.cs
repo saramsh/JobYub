@@ -26,6 +26,7 @@ namespace JobYub.Models
         public string Address { get; set; }
         public byte[] Photo { get; set; }
         public byte[] Resume { get; set; }
+        public bool IsPublic { get; set; } = true;
         public string Company { get; set; }
         public virtual int? CompanyTypeID { get; set; }
         public virtual CompanyType CompanyType { get; set; }
@@ -39,5 +40,10 @@ namespace JobYub.Models
         public string Token { get; set; }
 
     }
-	public enum MilitaryStatus { PayanKhedmat, MoafiatDaem, MoafiatTahsili,DarHaleAnjam, Mashmool }
+    public class ApplicationRole:IdentityRole
+
+    {
+
+    }
+	public enum MilitaryStatus { DarHaleKhedmat, Moaaf, PayanKhedmat }
 }
