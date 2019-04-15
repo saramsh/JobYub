@@ -31,20 +31,20 @@ namespace JobYub.Controllers
 			[Required]
 			public string PhoneNumber { get; set; }
 
-			[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
+			[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 0)]
 			public string FirstName { get; set; }
 
-			[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
+			[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 0)]
 			public string LastName { get; set; }
 
 			[Url]
-			[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+			[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 0)]
 			public string Website { get; set; }
 
-			[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
+			[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 0)]
 			public string BirthDate { get; set; }
 
-			[StringLength(11, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 8)]
+			[StringLength(11, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 0)]
 			public string HomePhone { get; set; }
 
             //[Required]
@@ -56,7 +56,7 @@ namespace JobYub.Controllers
 			[MaxLength(6)]
 			public string VerificationCode { get; set; }
 
-			[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+			[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 0)]
 			[DataType(DataType.Password)]
 			public string Password { get; set; }
 
@@ -73,19 +73,19 @@ namespace JobYub.Controllers
 			
 			public int? RegionID { get; set; }
 
-			[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+			[StringLength(1000, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 0)]
 			public string Address { get; set; }
 
 			//size: 100k
-			[StringLength(1000000, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+			[StringLength(1000000, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 0)]
 			public string Photo { get; set; }
 
 			//size: 1000k
-			[StringLength(1000000, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+			[StringLength(1000000, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 0)]
 			public string Resume { get; set; }
 
 			//register required fields for employer 
-			[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+			[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength =0)]
 			public string Company { get; set; }
 			public int? CompanyTypeID { get; set; }
 
@@ -102,6 +102,11 @@ namespace JobYub.Controllers
 			public int? Experience { get; set; }
 
 			public string ID { get; set; }
+
+			[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 0)]
+			public string RawTextResume { get; set; }
+
+			public bool IsPublic { get; set; }
 
 			//public Advertisement[] ad
 		}
@@ -139,6 +144,11 @@ namespace JobYub.Controllers
 				ApUser.Longtitude = Input.longtitude;
 				ApUser.Latitude = Input.Latitude;
 				ApUser.Graduated = Input.Graduated;
+				if (Input.IsPublic != null)
+					ApUser.IsPublic = Input.IsPublic;
+				else
+					ApUser.IsPublic = false;
+				ApUser.RawTextResume = Input.RawTextResume;
 				if (Input.EducationLevel != null)
 					ApUser.EducationLevel =  await _context.EducationLevel.FindAsync( Input.EducationLevel);
 				ApUser.Experience = Input.Experience==null?ApUser.Experience:Input.Experience;

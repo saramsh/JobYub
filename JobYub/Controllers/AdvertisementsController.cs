@@ -12,7 +12,6 @@ using System.Linq.Expressions;
 using Microsoft.Spatial;
 using GeoCoordinatePortable;
 
-
 namespace JobYub.Controllers
 {
     [Route("api/[controller]")]
@@ -35,13 +34,21 @@ namespace JobYub.Controllers
         [HttpGet]
         public async Task<ActionResult> GetAdvertisement(int? cityId, int page = 1, bool confirmed=false)
         {
-            IQueryable<Advertisement> res = _context.Advertisement.Include(s => s.City).Include(s => s.Tarrif).Include(s => s.Region).Include(s => s.AdvertisementMajors).Include(s => s.AdvertisementEducationLevels);
+			//var user=_context.Users.Where(u=>u.Id== HttpContext.User.Identity.Name);
+			//IQueryable<Advertisement> adsvertisements= _context.Advertisement.AsQueryable();
+			//var kk = ("Administrators");
+			//var bbb = HttpContext.User.IsInRole("MODERATORS");
+			//var aaa = HttpContext.User.IsInRole("Administrators");
+			//if (!HttpContext.User.IsInRole("Administrators") && !HttpContext.User.IsInRole("Moderators"))
+			//	adsvertisements=_context.Advertisement.Where(a => a.ApplicationUserID == HttpContext.User.Identity.Name).AsQueryable();
+
+			IQueryable<Advertisement> res = _context.Advertisement.Include(s => s.City).Include(s => s.Tarrif).Include(s => s.Region).Include(s => s.AdvertisementMajors).Include(s => s.AdvertisementEducationLevels).OrderByDescending(s=>s.StartDate);
             
             if (cityId != null && cityId != 0)
                 res = res.Where(a=>a.CityID==cityId);
             List<Advertisement> result =await  res.Skip((page-1) * 15).Take(15).ToListAsync();
             if (result != null)
-                return Ok(new { Total = result.Count(), result = result });
+                return Ok(new { Total = res.Count(), result = result });
             else
                 return NotFound();
                     
@@ -185,7 +192,7 @@ namespace JobYub.Controllers
                
             //IQueryable<Advertisement> res = _context.Advertisement;
 
-            var query = _context.Advertisement.Where(a=>a.status==Status.confirmed).AsQueryable();
+            var query = _context.Advertisement.Where(a=>a.status==Status.confirmed).Include(s => s.City).Include(s => s.Tarrif).Include(s => s.Region).Include(s => s.AdvertisementMajors).Include(s => s.AdvertisementEducationLevels).AsQueryable();
             query = query.Where(a => a.status == Status.confirmed);         
             if (model.AdvertisementType != null)
                 query = query.Where(a => a.advertisementType == model.AdvertisementType);
@@ -279,10 +286,10 @@ namespace JobYub.Controllers
 						break;
 					}
 			}
-
+			int total = advertisementDist.Count();
 			advertisementDist =  advertisementDist.Skip((page - 1) * 15).Take(15).ToDictionary(z => z.Key, y => y.Value); 
 			//return Ok(await query.ToListAsync());
-			return Ok(new { advertisments = advertisementDist.Keys, distances = advertisementDist.Values });
+			return Ok(new { total=total, advertisments = advertisementDist.Keys, distances = advertisementDist.Values });
 		}
 
         [Route("/Advertisements/Confirm")]
@@ -306,6 +313,7 @@ namespace JobYub.Controllers
 		}
 
 		[Route("/Advertisements/Deactivate")]
+		//[HttpPost]
 		public async Task<ActionResult> DeactivateAdvertisements(AdvertisementIDsModel advertisementIDs)
 		{
 			try
