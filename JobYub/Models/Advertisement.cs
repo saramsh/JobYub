@@ -41,7 +41,7 @@ namespace JobYub.Models
 		[StringLength(11, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 11)]
 		public string PhoneNumber { get; set; }
         public string SalaryType { get; set; }
-
+		//aa
                                            //	public int MajorId { get; set; }
 
         public CollaborationType CollaborationType { get; set; }
