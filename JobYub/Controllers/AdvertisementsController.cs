@@ -92,7 +92,7 @@ namespace JobYub.Controllers
             }
 
             _context.Entry(advertisement).State = EntityState.Modified;
-
+			//a
             try
             {
                 await _context.SaveChangesAsync();
